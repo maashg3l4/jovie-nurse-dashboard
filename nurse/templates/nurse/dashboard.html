@@ -1,0 +1,1210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jovie Angela Martinez 💙 Nurse Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#5b9bd5; --blue-light:#a8ccee; --blue-deep:#2d6fa3;
+  --pink:#f4a7c0; --pink-light:#fce4ed;
+  --bg:#f0f6fc; --surface:#ffffff; --surface2:#e8f2fb;
+  --border:#c8dff0; --text:#1a2e42; --text2:#4a6a8a; --muted:#8aadc8;
+  --sidebar:linear-gradient(160deg,#2d6fa3 0%,#5b9bd5 60%,#a8d4f5 100%);
+  --shadow:0 4px 24px rgba(45,111,163,.10);
+  --shadow-lg:0 8px 40px rgba(45,111,163,.18);
+  --r:16px; --rs:10px;
+}
+[data-theme="dark"]{
+  --bg:#0d1b2a; --surface:#132338; --surface2:#1a2f45;
+  --border:#1e3a56; --text:#e8f2fb; --text2:#8aadc8; --muted:#4a6a8a;
+  --shadow:0 4px 24px rgba(0,0,0,.4); --shadow-lg:0 8px 40px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;transition:background .3s,color .3s;overflow-x:hidden;}
+
+/* CANVAS LAYERS */
+#confetti-canvas,#particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+#confetti-canvas{z-index:9999;}
+#particles-canvas{opacity:.35;}
+
+/* HEARTS */
+.hearts-wrap{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;overflow:hidden;}
+.heart{position:absolute;bottom:-40px;animation:floatUp linear infinite;opacity:0;}
+@keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0;}10%{opacity:.7;}90%{opacity:.2;}100%{transform:translateY(-105vh) scale(1.1);opacity:0;}}
+
+/* SIDEBAR */
+.sidebar{width:260px;min-height:100vh;background:var(--sidebar);display:flex;flex-direction:column;padding:28px 18px;position:fixed;top:0;left:0;z-index:100;box-shadow:4px 0 24px rgba(45,111,163,.2);transition:transform .3s;}
+.s-logo{text-align:center;margin-bottom:28px;}
+.s-avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.25);border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px;}
+.s-name{color:#fff;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;line-height:1.3;}
+.s-role{color:rgba(255,255,255,.65);font-size:11px;margin-top:3px;}
+.nav-lbl{color:rgba(255,255,255,.45);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:0 10px;margin:14px 0 5px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:var(--rs);cursor:pointer;transition:all .2s;color:rgba(255,255,255,.78);font-size:13px;font-weight:500;margin-bottom:2px;}
+.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.18);color:#fff;}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.s-bottom{margin-top:auto;}
+.theme-btn{display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,.72);font-size:13px;background:rgba(255,255,255,.1);border:none;width:100%;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.theme-btn:hover{background:rgba(255,255,255,.2);color:#fff;}
+
+/* MAIN */
+.main{margin-left:260px;flex:1;padding:28px;position:relative;z-index:2;}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.topbar h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;}
+.topbar p{color:var(--text2);font-size:12px;margin-top:2px;}
+.badge{background:var(--pink-light);color:#c06080;border-radius:100px;padding:4px 12px;font-size:11px;font-weight:600;margin-left:8px;}
+[data-theme="dark"] .badge{background:rgba(244,167,192,.15);color:var(--pink);}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .35s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--r);padding:22px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:18px;}
+.card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+
+/* LOVE NOTE */
+.love-note{background:linear-gradient(135deg,#deeeff 0%,#fce4ed 100%);border-radius:var(--r);padding:26px;position:relative;overflow:hidden;border:1px solid var(--border);margin-bottom:18px;}
+[data-theme="dark"] .love-note{background:linear-gradient(135deg,rgba(91,155,213,.15) 0%,rgba(244,167,192,.1) 100%);}
+.love-deco{position:absolute;top:-15px;right:-15px;font-size:70px;opacity:.1;}
+.love-note h3{font-family:'Playfair Display',serif;font-size:19px;color:var(--blue-deep);margin-bottom:10px;}
+[data-theme="dark"] .love-note h3{color:var(--blue-light);}
+.love-note p{font-size:14px;line-height:1.8;color:var(--text2);font-style:italic;}
+
+/* COUNTDOWN */
+.countdown-card{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-deep) 100%);border-radius:var(--r);padding:22px;color:white;text-align:center;margin-bottom:18px;}
+.countdown-card h3{font-family:'Playfair Display',serif;font-size:15px;opacity:.9;margin-bottom:14px;}
+.cd-nums{display:flex;justify-content:center;gap:18px;}
+.cd-unit .num{font-size:34px;font-weight:700;font-family:'Playfair Display',serif;}
+.cd-unit .lbl{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:1px;}
+
+/* QUOTE & TIP */
+.quote-card{background:var(--surface2);border-radius:var(--rs);padding:18px;border-left:4px solid var(--blue);margin-bottom:14px;}
+.quote-text{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;line-height:1.7;}
+.quote-attr{font-size:11px;color:var(--muted);margin-top:6px;}
+.tip-card{background:var(--surface2);border-radius:var(--rs);padding:13px 15px;border:1px solid var(--border);margin-bottom:8px;display:flex;gap:10px;align-items:flex-start;}
+.tip-icon{font-size:18px;flex-shrink:0;}
+.tip-text{font-size:13px;color:var(--text2);line-height:1.55;}
+
+/* STAT CARD */
+.stat-card{background:var(--surface);border-radius:var(--r);padding:18px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center;transition:transform .2s;}
+.stat-card:hover{transform:translateY(-3px);}
+.stat-icon{font-size:26px;margin-bottom:6px;}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;}
+.stat-value{font-size:13px;font-weight:700;color:var(--blue-deep);}
+[data-theme="dark"] .stat-value{color:var(--blue-light);}
+
+/* FORMS */
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px;}
+.form-input,.form-textarea,.form-select{width:100%;padding:10px 13px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;transition:border-color .2s;outline:none;}
+.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--blue);}
+.form-textarea{min-height:90px;resize:vertical;}
+
+/* BUTTONS */
+.btn{padding:10px 22px;border-radius:100px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:white;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(91,155,213,.4);}
+.btn-pink{background:linear-gradient(135deg,var(--pink),#e07898);color:white;}
+.btn-pink:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(244,167,192,.4);}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text2);}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue);}
+.btn-sm{padding:7px 16px;font-size:12px;}
+
+/* CHECKLIST */
+.check-item{display:flex;align-items:center;gap:11px;padding:11px 13px;border-radius:var(--rs);background:var(--surface2);border:1px solid var(--border);margin-bottom:7px;cursor:pointer;transition:all .2s;user-select:none;}
+.check-item:hover{border-color:var(--blue-light);}
+.check-item.done{opacity:.5;}
+.check-item.done .check-text{text-decoration:line-through;}
+.check-box{width:19px;height:19px;border-radius:5px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:all .2s;}
+.check-item.done .check-box{background:var(--blue);border-color:var(--blue);color:white;}
+
+/* VITALS */
+.vital-row{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:9px;}
+.vital-name{font-size:13px;font-weight:600;}
+.vital-range{font-size:11px;color:var(--muted);}
+.vital-input{width:110px;padding:7px 11px;border-radius:var(--rs);border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+.vital-input:focus{border-color:var(--blue);}
+
+/* STRESS DOTS */
+.stress-dot{width:13px;height:13px;border-radius:50%;background:var(--border);cursor:pointer;transition:all .2s;display:inline-block;margin-right:4px;}
+.s1{background:#7ec8a0;} .s2{background:#f7c948;} .s3{background:#f4a76c;} .s4{background:#f47c6c;} .s5{background:#e05555;}
+
+/* GOALS */
+.goal-item{display:flex;align-items:flex-start;gap:11px;padding:13px 15px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:9px;}
+.goal-num{width:25px;height:25px;border-radius:50%;background:var(--blue);color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.goal-title{font-size:13px;font-weight:600;}
+.goal-sub{font-size:11px;color:var(--text2);margin-top:2px;}
+
+/* ABBR */
+.abbr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:9px;}
+.abbr-item{background:var(--surface2);border-radius:var(--rs);padding:11px 13px;border:1px solid var(--border);}
+.abbr-code{font-size:15px;font-weight:700;color:var(--blue-deep);font-family:'Playfair Display',serif;}
+[data-theme="dark"] .abbr-code{color:var(--blue-light);}
+.abbr-meaning{font-size:11px;color:var(--text2);margin-top:3px;}
+
+/* SLEEP BAR */
+.sleep-bar{background:var(--border);border-radius:100px;height:9px;overflow:hidden;margin:7px 0;}
+.sleep-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--blue),var(--pink));transition:width .4s ease;}
+
+/* ═══════════════════════════════════════
+   POMODORO
+═══════════════════════════════════════ */
+.pomo-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0;}
+.pomo-modes{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;justify-content:center;}
+.pomo-mode-btn{padding:7px 18px;border-radius:100px;border:2px solid rgba(255,255,255,.4);background:transparent;color:white;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.pomo-mode-btn.active{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.8);}
+.pomo-header-card{background:linear-gradient(135deg,var(--blue),var(--blue-deep));border-radius:var(--r);padding:28px 20px;text-align:center;color:white;margin-bottom:18px;}
+.pomo-session-info{font-size:12px;opacity:.75;margin-bottom:10px;font-family:'DM Sans',sans-serif;letter-spacing:1px;}
+.pomo-dots{display:flex;gap:8px;justify-content:center;margin-bottom:20px;}
+.pomo-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .3s;}
+.pomo-dot.done{background:rgba(255,255,255,.9);}
+.pomo-ring-wrap{position:relative;width:200px;height:200px;margin:0 auto 18px;}
+.pomo-ring-wrap svg{position:absolute;top:0;left:0;transform:rotate(-90deg);}
+.pomo-ring-bg{fill:none;stroke:rgba(255,255,255,.15);stroke-width:10;}
+.pomo-ring-fill{fill:none;stroke:rgba(255,255,255,.85);stroke-width:10;stroke-linecap:round;stroke-dasharray:565;stroke-dashoffset:0;transition:stroke-dashoffset .5s ease;}
+.pomo-ring-fill.break{stroke:#f4a7c0;}
+.pomo-time-display{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;}
+.pomo-digits{font-size:42px;font-weight:700;font-family:'Playfair Display',serif;color:white;line-height:1;}
+.pomo-phase{font-size:11px;color:rgba(255,255,255,.7);margin-top:5px;letter-spacing:2px;text-transform:uppercase;}
+.pomo-controls{display:flex;gap:14px;align-items:center;justify-content:center;margin-bottom:18px;}
+.pomo-btn-main{width:58px;height:58px;border-radius:50%;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.6);color:white;font-size:22px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.pomo-btn-main:hover{background:rgba(255,255,255,.35);transform:scale(1.08);}
+.pomo-btn-sec{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.35);color:white;font-size:16px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.pomo-btn-sec:hover{background:rgba(255,255,255,.2);}
+.pomo-settings{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;}
+.pomo-setting{display:flex;align-items:center;gap:7px;font-size:12px;color:rgba(255,255,255,.8);}
+.pomo-setting input{width:50px;padding:5px 8px;border-radius:var(--rs);border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.15);color:white;font-size:13px;text-align:center;outline:none;font-family:'DM Sans',sans-serif;}
+.pomo-quote{font-size:13px;color:rgba(255,255,255,.8);font-style:italic;text-align:center;max-width:340px;line-height:1.55;padding:12px 16px;background:rgba(255,255,255,.08);border-radius:var(--rs);}
+.eye-rule-banner{background:rgba(255,255,255,.1);border-radius:var(--rs);padding:14px 18px;margin-top:14px;text-align:center;border:1px solid rgba(255,255,255,.2);}
+.eye-rule-banner h4{color:white;font-size:13px;margin-bottom:5px;}
+.eye-rule-banner p{color:rgba(255,255,255,.75);font-size:12px;line-height:1.5;}
+.pomo-stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px;}
+.pomo-stat{text-align:center;background:var(--surface2);border-radius:var(--rs);padding:12px 18px;border:1px solid var(--border);}
+.pomo-stat-num{font-size:22px;font-weight:700;color:var(--blue);font-family:'Playfair Display',serif;}
+.pomo-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+/* ═══════════════════════════════════════
+   BREATHING & CALM
+═══════════════════════════════════════ */
+.breathe-tech-btns{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:20px;}
+.breathe-tech-btn{padding:7px 16px;border-radius:100px;border:2px solid var(--border);background:transparent;color:var(--text2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;}
+.breathe-tech-btn.active{background:var(--blue);border-color:var(--blue);color:white;}
+.breathe-circle-wrap{position:relative;width:200px;height:200px;margin:20px auto;display:flex;align-items:center;justify-content:center;}
+.breathe-circle{width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(91,155,213,.45) 0%,rgba(91,155,213,.08) 70%);border:3px solid var(--blue-light);display:flex;align-items:center;justify-content:center;transition:transform .3s ease;box-shadow:0 0 40px rgba(91,155,213,.2);}
+.breathe-circle.pulsing{animation:bPulse 4s ease-in-out infinite;}
+@keyframes bPulse{0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(91,155,213,.2);}50%{transform:scale(1.38);box-shadow:0 0 70px rgba(91,155,213,.55);}}
+.breathe-count{font-size:44px;font-family:'Playfair Display',serif;font-weight:700;color:var(--blue);}
+.breathe-instruction{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--blue-deep);text-align:center;margin-top:8px;}
+[data-theme="dark"] .breathe-instruction{color:var(--blue-light);}
+.breathe-sublabel{font-size:12px;color:var(--muted);text-align:center;margin-top:4px;letter-spacing:1px;}
+.breathe-stats{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:16px;}
+.b-stat{text-align:center;background:var(--surface2);border-radius:var(--rs);padding:10px 18px;border:1px solid var(--border);}
+.b-stat-num{font-size:22px;font-weight:700;color:var(--blue);font-family:'Playfair Display',serif;}
+.b-stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+
+/* ALL IS WELL */
+.all-is-well{background:linear-gradient(135deg,#deeeff,#fce4ed);border-radius:var(--r);padding:26px;text-align:center;border:1px solid var(--blue-light);margin-bottom:16px;position:relative;overflow:hidden;}
+[data-theme="dark"] .all-is-well{background:linear-gradient(135deg,rgba(91,155,213,.15),rgba(244,167,192,.1));}
+.aiw-text{font-family:'Playfair Display',serif;font-size:30px;font-weight:700;color:var(--blue-deep);margin-bottom:10px;animation:aiwPulse 3s ease-in-out infinite;}
+[data-theme="dark"] .aiw-text{color:var(--blue-light);}
+@keyframes aiwPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.7;transform:scale(1.03);}}
+.aiw-sub{font-size:13px;color:var(--text2);font-style:italic;line-height:1.7;}
+
+/* CALM QUOTE */
+.calm-quote-box{background:var(--surface2);border-radius:var(--rs);padding:16px 18px;border-left:4px solid var(--pink);margin:12px 0;transition:opacity .35s ease;}
+.calm-quote-text{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--text);line-height:1.7;}
+.calm-quote-attr{font-size:11px;color:var(--muted);margin-top:6px;}
+
+/* OCEAN BUTTON */
+.ocean-btn-wrap{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:16px 0;}
+
+/* PHOTO */
+.photo-drop{border:2px dashed var(--border);border-radius:var(--r);padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surface2);}
+.photo-drop:hover{border-color:var(--blue);background:rgba(91,155,213,.04);}
+#photo-preview{width:100%;max-height:240px;object-fit:cover;border-radius:var(--rs);margin-top:14px;display:none;}
+.photo-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:14px;}
+.photo-gallery img{width:100%;height:110px;object-fit:cover;border-radius:var(--rs);cursor:pointer;transition:transform .2s;}
+.photo-gallery img:hover{transform:scale(1.03);}
+
+/* FAB */
+.fab{position:fixed;bottom:28px;right:28px;z-index:200;display:flex;flex-direction:column;align-items:flex-end;gap:9px;}
+.fab-main{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-deep));border:none;color:white;font-size:24px;cursor:pointer;box-shadow:0 4px 18px rgba(45,111,163,.4);transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.fab-main:hover{transform:scale(1.1);}
+.fab-menu{display:none;flex-direction:column;gap:7px;align-items:flex-end;}
+.fab-menu.open{display:flex;}
+.fab-item{display:flex;align-items:center;gap:9px;background:var(--surface);border-radius:100px;padding:8px 15px 8px 11px;box-shadow:var(--shadow);border:1px solid var(--border);cursor:pointer;font-size:12px;font-weight:500;transition:all .2s;color:var(--text);}
+.fab-item:hover{background:var(--blue);color:white;border-color:var(--blue);}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;right:28px;background:var(--blue-deep);color:white;padding:11px 18px;border-radius:100px;font-size:13px;font-weight:500;z-index:9998;opacity:0;transition:opacity .3s;pointer-events:none;}
+.toast.show{opacity:1;}
+
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:300;background:var(--blue);color:white;border:none;border-radius:9px;width:40px;height:40px;font-size:18px;align-items:center;justify-content:center;cursor:pointer;}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-260px);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .grid2,.grid3,.grid4{grid-template-columns:1fr;}
+  .hamburger{display:flex;}
+}
+
+/* scrollbar */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+<canvas id="particles-canvas"></canvas>
+<div class="hearts-wrap" id="hearts-wrap"></div>
+<button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar">
+  <div class="s-logo">
+    <div class="s-avatar">🩺</div>
+    <div class="s-name">Jovie Angela Martinez</div>
+    <div class="s-role">Nursing Student ✨ Day Shift</div>
+  </div>
+
+  <div class="nav-lbl">Main</div>
+  <div class="nav-item active" onclick="go('dashboard',this)"><span class="nav-icon">🏠</span> Dashboard</div>
+  <div class="nav-item" onclick="go('vitals',this)"><span class="nav-icon">❤️</span> Vital Signs Log</div>
+  <div class="nav-item" onclick="go('journal',this)"><span class="nav-icon">📓</span> Health Journal</div>
+  <div class="nav-item" onclick="go('stress',this)"><span class="nav-icon">🧘</span> Stress & Anxiety</div>
+
+  <div class="nav-lbl">Focus & Wellness</div>
+  <div class="nav-item" onclick="go('pomodoro',this)"><span class="nav-icon">🍅</span> Pomodoro Timer</div>
+  <div class="nav-item" onclick="go('breathe',this)"><span class="nav-icon">🌬️</span> Breathing & Calm</div>
+  <div class="nav-item" onclick="go('selfcare',this)"><span class="nav-icon">🌸</span> Self-Care Checklist</div>
+  <div class="nav-item" onclick="go('goals',this)"><span class="nav-icon">🌟</span> Goals & Achievements</div>
+
+  <div class="nav-lbl">Resources</div>
+  <div class="nav-item" onclick="go('abbr',this)"><span class="nav-icon">📋</span> Medical Abbreviations</div>
+  <div class="nav-item" onclick="go('photos',this)"><span class="nav-icon">📷</span> My Photos</div>
+
+  <div class="s-bottom">
+    <button class="theme-btn" onclick="toggleTheme()">
+      <span id="theme-icon">🌙</span> <span id="theme-lbl">Dark Mode</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1 id="pg-title">Good Morning, Jovie 💙</h1>
+      <p id="pg-date"></p>
+    </div>
+    <div>
+      <span class="badge">🩺 Day Shift</span>
+      <span class="badge">🌸 Nurse</span>
+    </div>
+  </div>
+
+  <!-- ══ DASHBOARD ══ -->
+  <div id="section-dashboard" class="section active">
+    <div class="love-note">
+      <div class="love-deco">💙</div>
+      <h3>A Message For You, Jovie 💌</h3>
+      <p>"You carry so much more than a stethoscope and a badge. You carry warmth into every room, patience into every moment, and love into every life you touch. I know the long shifts drain you, and I know some days feel heavier than others — but please know that someone across the distance is so incredibly proud of you. You are not just a nurse. You are a light. My light. 💙 No matter how many miles are between us, my heart is always right there beside you."</p>
+    </div>
+
+    <div class="countdown-card">
+      <h3>💕 Together Since Feb 22, 2025 — Long Distance Countdown</h3>
+      <div class="cd-nums">
+        <div class="cd-unit"><div class="num" id="cd-d">—</div><div class="lbl">Days</div></div>
+        <div class="cd-unit"><div class="num" id="cd-h">—</div><div class="lbl">Hours</div></div>
+        <div class="cd-unit"><div class="num" id="cd-m">—</div><div class="lbl">Minutes</div></div>
+        <div class="cd-unit"><div class="num" id="cd-s">—</div><div class="lbl">Seconds</div></div>
+      </div>
+      <p style="margin-top:12px;font-size:12px;opacity:.7;">Every second apart makes the reunion sweeter 💙</p>
+    </div>
+
+    <div class="grid4" style="margin-bottom:18px;">
+      {% for key, v in vitals_normal.items %}
+      <div class="stat-card">
+        <div class="stat-icon">{{ v.icon }}</div>
+        <div class="stat-label">{{ key }}</div>
+        <div class="stat-value">{{ v.normal }}</div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="grid2">
+      <div>
+        <div class="quote-card">
+          <div class="quote-text">"{{ quote }}"</div>
+          <div class="quote-attr">— Nurse's Quote of the Day ✨</div>
+        </div>
+        <div class="tip-card">
+          <div class="tip-icon">💡</div>
+          <div class="tip-text"><strong>Nursing Tip:</strong> {{ tip }}</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🌸 Quick Self-Care</div>
+        {% for item in self_care|slice:":5" %}
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"></div>
+          <span>{{ item.icon }}</span>
+          <span class="check-text">{{ item.text }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ VITALS ══ -->
+  <div id="section-vitals" class="section">
+    <div class="card">
+      <div class="card-title">🩺 Vital Signs Log</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px;">Track your readings from stethoscope, sphygmomanometer, pulse oximeter & glucometer.</p>
+      <div class="grid2">
+        <div class="form-group">
+          <label class="form-label">📅 Date & Time</label>
+          <input type="datetime-local" class="form-input" id="v-datetime">
+        </div>
+        <div class="form-group">
+          <label class="form-label">👤 Label (optional)</label>
+          <input type="text" class="form-input" placeholder="e.g. Morning check..." id="v-label">
+        </div>
+      </div>
+      {% for key, v in vitals_normal.items %}
+      <div class="vital-row">
+        <span style="font-size:22px;width:28px;text-align:center;">{{ v.icon }}</span>
+        <div style="flex:1;">
+          <div class="vital-name">{{ v.label }}</div>
+          <div class="vital-range">Normal: {{ v.normal }}</div>
+        </div>
+        <input type="text" class="vital-input" placeholder="Value" data-vital="{{ key }}" oninput="checkVital(this,'{{ key }}')">
+        <div style="font-size:18px;width:22px;" id="vs-{{ key }}">—</div>
+      </div>
+      {% endfor %}
+      <div class="form-group" style="margin-top:6px;">
+        <label class="form-label">📝 Notes</label>
+        <textarea class="form-textarea" placeholder="Any observations..." id="v-notes"></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="saveVitals()">💙 Save Vitals</button>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Vitals History</div>
+      <div id="vitals-history"><p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No logs yet 🩺</p></div>
+    </div>
+  </div>
+
+  <!-- ══ JOURNAL ══ -->
+  <div id="section-journal" class="section">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">📓 New Journal Entry</div>
+        <div class="form-group">
+          <label class="form-label">📅 Date</label>
+          <input type="date" class="form-input" id="j-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">😴 Sleep Hours</label>
+          <input type="range" min="0" max="12" value="7" class="form-input" id="j-sleep" oninput="updateSleep(this.value)" style="padding:5px 0;cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);"><span>0h</span><span id="j-sleep-val">7h</span><span>12h</span></div>
+          <div class="sleep-bar"><div class="sleep-fill" id="j-sleep-bar" style="width:58%"></div></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">⚡ Energy Level</label>
+          <select class="form-select" id="j-energy">
+            <option>🔋 Very Low</option><option>🔋🔋 Low</option>
+            <option selected>🔋🔋🔋 Moderate</option><option>🔋🔋🔋🔋 High</option><option>⚡ Excellent</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">💧 Water (glasses)</label>
+          <input type="number" class="form-input" min="0" max="20" value="8" id="j-water">
+        </div>
+        <div class="form-group">
+          <label class="form-label">🥗 Nutrition Notes</label>
+          <textarea class="form-textarea" placeholder="What did you eat today?" id="j-nutrition" style="min-height:65px;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">💭 How are you feeling?</label>
+          <textarea class="form-textarea" placeholder="This is your safe space, Jovie 💙" id="j-feelings"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="saveJournal()">💙 Save Entry</button>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">📚 Journal History</div>
+          <div id="journal-history"><p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No entries yet 📓</p></div>
+        </div>
+        <div class="quote-card">
+          <div class="quote-text">"Rest is not a reward for finishing. Rest is part of how you finish well."</div>
+          <div class="quote-attr">— For every nurse who forgets to rest 💙</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ STRESS ══ -->
+  <div id="section-stress" class="section">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🧘 Stress & Anxiety Log</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Rate your stress triggers honestly. This is just for you. 💙</p>
+        <div class="form-group">
+          <label class="form-label">📅 Date</label>
+          <input type="date" class="form-input" id="st-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">😤 Rude Groupmates / Classmates</label>
+          <div style="margin-top:8px;">
+            <span class="stress-dot" onclick="setStress('gm',1,this)" title="Mild"></span>
+            <span class="stress-dot" onclick="setStress('gm',2,this)" title="Low"></span>
+            <span class="stress-dot" onclick="setStress('gm',3,this)" title="Moderate"></span>
+            <span class="stress-dot" onclick="setStress('gm',4,this)" title="High"></span>
+            <span class="stress-dot" onclick="setStress('gm',5,this)" title="Severe"></span>
+          </div>
+          <input type="text" class="form-input" style="margin-top:8px;" placeholder="What happened? (optional)" id="st-gm-note">
+        </div>
+        <div class="form-group">
+          <label class="form-label">😔 Overall Stress Level</label>
+          <select class="form-select" id="st-overall">
+            <option value="1">😌 1 — Very Calm</option><option value="2">🙂 2 — Mostly Fine</option>
+            <option value="3" selected>😐 3 — Moderate</option><option value="4">😟 4 — Stressed</option><option value="5">😰 5 — Overwhelmed</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">📝 What's weighing on you?</label>
+          <textarea class="form-textarea" placeholder="Let it out here. No judgment, only love 💙" id="st-notes"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">💆 What helped today?</label>
+          <textarea class="form-textarea" placeholder="Music, breathing, walking..." id="st-helped" style="min-height:65px;"></textarea>
+        </div>
+        <button class="btn btn-pink" onclick="saveStress()">🌸 Save Stress Log</button>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">💙 Affirmations for Jovie</div>
+          <div class="tip-card" style="background:rgba(91,155,213,.06);">
+            <div class="tip-icon">💙</div>
+            <div class="tip-text">You don't have to carry everything alone. You are enough, exactly as you are.</div>
+          </div>
+          <div class="tip-card" style="background:rgba(244,167,192,.08);">
+            <div class="tip-icon">🌸</div>
+            <div class="tip-text">Their rudeness reflects them — not your worth or your capabilities.</div>
+          </div>
+          <div class="tip-card" style="background:rgba(91,155,213,.06);">
+            <div class="tip-icon">✨</div>
+            <div class="tip-text">You survived 100% of your hard days so far. This one is no different.</div>
+          </div>
+          <div class="tip-card" style="background:rgba(244,167,192,.08);">
+            <div class="tip-icon">💪</div>
+            <div class="tip-text">Being kind in a difficult environment takes more strength than most people know.</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Stress History</div>
+          <div id="stress-history"><p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No logs yet 🧘</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ POMODORO ══ -->
+  <div id="section-pomodoro" class="section">
+    <div class="grid2">
+      <div>
+        <div class="pomo-header-card">
+          <div class="pomo-session-info" id="pomo-session-info">SESSION 1 OF 4</div>
+          <div class="pomo-dots">
+            <div class="pomo-dot" id="pd0"></div>
+            <div class="pomo-dot" id="pd1"></div>
+            <div class="pomo-dot" id="pd2"></div>
+            <div class="pomo-dot" id="pd3"></div>
+          </div>
+
+          <div class="pomo-modes">
+            <button class="pomo-mode-btn active" onclick="setMode('work',this)">🧠 Focus</button>
+            <button class="pomo-mode-btn" onclick="setMode('short',this)">☕ Short Break</button>
+            <button class="pomo-mode-btn" onclick="setMode('long',this)">🌸 Long Break</button>
+          </div>
+
+          <div class="pomo-ring-wrap">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+              <circle class="pomo-ring-bg" cx="100" cy="100" r="90"/>
+              <circle class="pomo-ring-fill" id="pomo-ring" cx="100" cy="100" r="90"/>
+            </svg>
+            <div class="pomo-time-display">
+              <div class="pomo-digits" id="pomo-time">25:00</div>
+              <div class="pomo-phase" id="pomo-phase">FOCUS TIME</div>
+            </div>
+          </div>
+
+          <div class="pomo-controls">
+            <button class="pomo-btn-sec" onclick="resetPomo()" title="Reset">↺</button>
+            <button class="pomo-btn-main" id="pomo-play" onclick="togglePomo()">▶</button>
+            <button class="pomo-btn-sec" onclick="skipPomo()" title="Skip">⏭</button>
+          </div>
+
+          <div class="pomo-settings">
+            <div class="pomo-setting">🧠 Focus <input type="number" id="p-work" value="25" min="1" max="90" onchange="updatePomoConfig()"> min</div>
+            <div class="pomo-setting">☕ Break <input type="number" id="p-break" value="5" min="1" max="30" onchange="updatePomoConfig()"> min</div>
+          </div>
+
+          <div class="pomo-quote" id="pomo-quote">"You are building something beautiful, Jovie. Session by session. 🌸"</div>
+
+          <div class="eye-rule-banner">
+            <h4>👁️ 20-20-20 Eye Rule</h4>
+            <p>Every <strong>20 minutes</strong>, look at something <strong>20 feet away</strong> for <strong>20 seconds</strong> to protect your eyes 🌿</p>
+            <div id="eye-timer" style="font-size:12px;color:rgba(255,255,255,.8);margin-top:7px;font-weight:600;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-title">📊 Today's Focus Stats</div>
+          <div class="pomo-stats">
+            <div class="pomo-stat"><div class="pomo-stat-num" id="p-total-s">0</div><div class="pomo-stat-lbl">Sessions</div></div>
+            <div class="pomo-stat"><div class="pomo-stat-num" id="p-total-m">0</div><div class="pomo-stat-lbl">Minutes</div></div>
+            <div class="pomo-stat"><div class="pomo-stat-num" id="p-breaks">0</div><div class="pomo-stat-lbl">Breaks</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">💙 Pomodoro Tips for Nurses</div>
+          <div class="tip-card"><div class="tip-icon">📖</div><div class="tip-text">Use focus sessions for reading clinical notes, drug dosages, or reviewing procedures.</div></div>
+          <div class="tip-card"><div class="tip-icon">☕</div><div class="tip-text">During breaks: stretch, drink water, or do a quick breathing exercise.</div></div>
+          <div class="tip-card"><div class="tip-icon">👁️</div><div class="tip-text">Apply the 20-20-20 rule every break — your eyes will thank you after long study shifts!</div></div>
+          <div class="tip-card"><div class="tip-icon">🎯</div><div class="tip-text">Set one goal before each session: "This session I will finish Chapter 4."</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BREATHE ══ -->
+  <div id="section-breathe" class="section">
+    <div class="grid2">
+      <div class="card" style="display:flex;flex-direction:column;align-items:center;">
+        <div class="card-title" style="align-self:flex-start;">🌬️ Breathing Exercise</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:18px;align-self:flex-start;">Pause. Breathe. You are safe. You are strong. 💙</p>
+
+        <div class="breathe-tech-btns">
+          <button class="breathe-tech-btn active" onclick="setBTech('box',this)">📦 Box (4-4-4-4)</button>
+          <button class="breathe-tech-btn" onclick="setBTech('478',this)">🌙 4-7-8 Calm</button>
+          <button class="breathe-tech-btn" onclick="setBTech('deep',this)">🌊 Deep Belly</button>
+        </div>
+
+        <div class="breathe-circle-wrap">
+          <div class="breathe-circle" id="breathe-circle">
+            <div class="breathe-count" id="breathe-count">4</div>
+          </div>
+        </div>
+
+        <div class="breathe-instruction" id="breathe-instruction">Breathe In 🌬️</div>
+        <div class="breathe-sublabel" id="breathe-sublabel">Press Start to begin</div>
+
+        <div class="ocean-btn-wrap">
+          <button class="btn btn-primary" id="b-start-btn" onclick="startBreathe()">🌬️ Start</button>
+          <button class="btn btn-outline" onclick="stopBreathe()">Stop</button>
+          <button class="btn btn-outline" id="ocean-btn" onclick="toggleOcean()">🌊 Ocean Waves</button>
+        </div>
+
+        <div class="breathe-stats">
+          <div class="b-stat"><div class="b-stat-num" id="b-cycles">0</div><div class="b-stat-lbl">Cycles</div></div>
+          <div class="b-stat"><div class="b-stat-num" id="b-mins">0</div><div class="b-stat-lbl">Min Calm</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="all-is-well">
+          <div class="aiw-text">🌟 All Is Well 🌟</div>
+          <div class="aiw-sub">
+            "Aal izz well, Jovie Angela. 💙<br>
+            You are capable. You are strong.<br>
+            This moment will pass. You are so loved."
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">✨ Calming Quotes</div>
+          <div class="calm-quote-box" id="calm-quote-box">
+            <div class="calm-quote-text" id="calm-qt">"All is well. You are safe. You are loved. 💙"</div>
+            <div class="calm-quote-attr" id="calm-qa">— For Jovie, always</div>
+          </div>
+          <button class="btn btn-outline btn-sm" style="margin-top:10px;" onclick="nextCalmQuote()">✨ Next Quote</button>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📦 Box Breathing Guide</div>
+          <div class="tip-card" style="background:rgba(91,155,213,.06);">
+            <div class="tip-icon">1️⃣</div><div class="tip-text"><strong>Inhale</strong> slowly through your nose — <strong>4 seconds</strong></div>
+          </div>
+          <div class="tip-card" style="background:rgba(91,155,213,.06);">
+            <div class="tip-icon">2️⃣</div><div class="tip-text"><strong>Hold</strong> your breath — <strong>4 seconds</strong></div>
+          </div>
+          <div class="tip-card" style="background:rgba(91,155,213,.06);">
+            <div class="tip-icon">3️⃣</div><div class="tip-text"><strong>Exhale</strong> slowly through mouth — <strong>4 seconds</strong></div>
+          </div>
+          <div class="tip-card" style="background:rgba(91,155,213,.06);">
+            <div class="tip-icon">4️⃣</div><div class="tip-text"><strong>Hold empty</strong> — <strong>4 seconds</strong>, then repeat 🌿</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ SELF-CARE ══ -->
+  <div id="section-selfcare" class="section">
+    <div class="card">
+      <div class="card-title">🌸 Daily Self-Care Checklist</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:18px;">You take care of everyone else — now take care of you, Jovie. 💙</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:9px;">
+        {% for item in self_care %}
+        <div class="check-item" onclick="toggleCheck(this);updateSCProgress()">
+          <div class="check-box"></div>
+          <span>{{ item.icon }}</span>
+          <span class="check-text">{{ item.text }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      <div style="margin-top:18px;text-align:center;">
+        <div id="sc-progress" style="font-size:13px;color:var(--text2);margin-bottom:7px;">0 / {{ self_care|length }} completed</div>
+        <div class="sleep-bar" style="max-width:380px;margin:0 auto;height:11px;"><div class="sleep-fill" id="sc-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ GOALS ══ -->
+  <div id="section-goals" class="section">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">🌟 My Goals</div>
+        <div id="goals-list">
+          <div class="goal-item"><div class="goal-num">1</div><div style="flex:1;"><div class="goal-title">Pass all nursing subjects this semester 📚</div><div class="goal-sub">Academic — Spring 2026</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
+          <div class="goal-item"><div class="goal-num">2</div><div style="flex:1;"><div class="goal-title">Master vital signs monitoring tools 🩺</div><div class="goal-sub">Clinical — Stethoscope, Sphygmomanometer, Pulse Oximeter, Glucometer</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
+          <div class="goal-item"><div class="goal-num">3</div><div style="flex:1;"><div class="goal-title">Practice self-care every single day 🌸</div><div class="goal-sub">Personal wellness</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
+          <div class="goal-item"><div class="goal-num">4</div><div style="flex:1;"><div class="goal-title">Stay calm with difficult people 💙</div><div class="goal-sub">Resilience — Your kindness is your superpower</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
+          <div class="goal-item"><div class="goal-num">5</div><div style="flex:1;"><div class="goal-title">Memorize 50 medical abbreviations 📋</div><div class="goal-sub">Knowledge</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
+        </div>
+        <div style="display:flex;gap:9px;margin-top:14px;">
+          <input type="text" class="form-input" placeholder="Add a new goal..." id="new-goal">
+          <button class="btn btn-primary btn-sm" onclick="addGoal()">+ Add</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🏆 Achievements</div>
+        <div class="tip-card"><div class="tip-icon">🎓</div><div class="tip-text"><strong>Enrolled Nurse</strong> — Started nursing school. The hardest step is always the first. 💙</div></div>
+        <div class="tip-card"><div class="tip-icon">💪</div><div class="tip-text"><strong>Resilient Soul</strong> — Showed up even on the hard days, even with difficult people around.</div></div>
+        <div class="tip-card"><div class="tip-icon">🩺</div><div class="tip-text"><strong>Tool Master (In Training)</strong> — Learning stethoscope, sphygmomanometer, pulse oximeter & glucometer.</div></div>
+        <div class="tip-card"><div class="tip-icon">💙</div><div class="tip-text"><strong>Long Distance Champion</strong> — Staying strong and loving across the miles. That takes real heart.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ ABBREVIATIONS ══ -->
+  <div id="section-abbr" class="section">
+    <div class="card">
+      <div class="card-title">📋 Medical Abbreviations Guide</div>
+      <input type="text" class="form-input" placeholder="🔍 Search abbreviations..." oninput="filterAbbr(this)" style="margin-bottom:18px;">
+      <div class="abbr-grid" id="abbr-grid">
+        {% for item in abbreviations %}
+        <div class="abbr-item" data-abbr="{{ item.abbr|lower }}" data-meaning="{{ item.meaning|lower }}">
+          <div class="abbr-code">{{ item.abbr }}</div>
+          <div class="abbr-meaning">{{ item.meaning }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PHOTOS ══ -->
+  <div id="section-photos" class="section">
+    <div class="card">
+      <div class="card-title">📷 Jovie's Photo Gallery</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">Upload your precious memories 💙🌸</p>
+      <div class="photo-drop" onclick="document.getElementById('photo-input').click()">
+        <div style="font-size:38px;margin-bottom:8px;">📷</div>
+        <div style="font-size:14px;color:var(--text2);">Click to upload a photo</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:5px;">JPG, PNG — Your memories are safe here 🌸</div>
+        <input type="file" id="photo-input" accept="image/*" style="display:none;" onchange="addPhoto(event)">
+      </div>
+      <img id="photo-preview" alt="Preview">
+      <div class="photo-gallery" id="photo-gallery"></div>
+    </div>
+  </div>
+
+</main>
+
+<!-- FAB -->
+<div class="fab">
+  <div class="fab-menu" id="fab-menu">
+    <div class="fab-item" onclick="go('pomodoro',null);closeFab()">🍅 Pomodoro</div>
+    <div class="fab-item" onclick="go('breathe',null);closeFab()">🌬️ Breathe</div>
+    <div class="fab-item" onclick="go('journal',null);closeFab()">📓 Journal</div>
+    <div class="fab-item" onclick="go('vitals',null);closeFab()">🩺 Vitals</div>
+  </div>
+  <button class="fab-main" id="fab-btn" onclick="toggleFab()">＋</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const CSRF = "{{ csrf_token }}";
+
+// ═══════════════ UTILS ═══════════════
+const $ = id => document.getElementById(id);
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
+function pad(n){ return String(n).padStart(2,'0'); }
+
+// ═══════════════ DATES ═══════════════
+const now = new Date();
+$('pg-date').textContent = now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+document.querySelectorAll('input[type="date"]').forEach(el => el.value = now.toISOString().split('T')[0]);
+document.querySelectorAll('input[type="datetime-local"]').forEach(el => el.value = now.toISOString().slice(0,16));
+
+// ═══════════════ COUNTDOWN ═══════════════
+const since = new Date('2025-02-22T00:00:00');
+function updateCD(){
+  const diff = Date.now() - since;
+  $('cd-d').textContent = Math.floor(diff/86400000);
+  $('cd-h').textContent = pad(Math.floor((diff%86400000)/3600000));
+  $('cd-m').textContent = pad(Math.floor((diff%3600000)/60000));
+  $('cd-s').textContent = pad(Math.floor((diff%60000)/1000));
+}
+updateCD(); setInterval(updateCD, 1000);
+
+// ═══════════════ NAV ═══════════════
+const titles = {
+  dashboard:'Good Morning, Jovie 💙', vitals:'Vital Signs Log 🩺',
+  journal:'Health Journal 📓', stress:'Stress & Anxiety 🧘',
+  pomodoro:'Pomodoro Focus Timer 🍅', breathe:'Breathing & Calm 🌬️',
+  selfcare:'Self-Care Checklist 🌸', goals:'Goals & Achievements 🌟',
+  abbr:'Medical Abbreviations 📋', photos:"Jovie's Photo Gallery 📷"
+};
+function go(name, navEl){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+  $('pg-title').textContent = titles[name]||name;
+  if(navEl){ document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); navEl.classList.add('active'); }
+}
+
+// ═══════════════ THEME ═══════════════
+function toggleTheme(){
+  const dark = document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme', dark?'light':'dark');
+  $('theme-icon').textContent = dark?'🌙':'☀️';
+  $('theme-lbl').textContent = dark?'Dark Mode':'Light Mode';
+}
+
+// ═══════════════ FLOATING HEARTS ═══════════════
+const HEARTS = ['💙','🌸','✨','💕','⭐','🩺','🌟','💗'];
+function spawnHeart(){
+  const h = document.createElement('div');
+  h.className = 'heart';
+  h.textContent = HEARTS[Math.floor(Math.random()*HEARTS.length)];
+  h.style.left = Math.random()*100+'vw';
+  h.style.fontSize = (11+Math.random()*14)+'px';
+  const d = 8+Math.random()*9;
+  h.style.animationDuration = d+'s';
+  h.style.animationDelay = Math.random()*2+'s';
+  document.getElementById('hearts-wrap').appendChild(h);
+  setTimeout(()=>h.remove(),(d+3)*1000);
+}
+for(let i=0;i<5;i++) setTimeout(spawnHeart, i*500);
+setInterval(spawnHeart, 2200);
+
+// ═══════════════ FLOATING PARTICLES ═══════════════
+(function(){
+  const c = $('particles-canvas');
+  if(!c) return;
+  const x = c.getContext('2d');
+  const resize = ()=>{ c.width=innerWidth; c.height=innerHeight; };
+  resize(); addEventListener('resize',resize);
+  const pts = Array.from({length:45},()=>({
+    x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+    r:1+Math.random()*2.5, vx:(Math.random()-.5)*.45, vy:(Math.random()-.5)*.45,
+    a:.15+Math.random()*.35
+  }));
+  function draw(){
+    x.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      x.beginPath(); x.arc(p.x,p.y,p.r,0,Math.PI*2);
+      x.fillStyle=`rgba(91,155,213,${p.a})`; x.fill();
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>c.width) p.vx*=-1;
+      if(p.y<0||p.y>c.height) p.vy*=-1;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════ CONFETTI ═══════════════
+function launchConfetti(){
+  const c = $('confetti-canvas');
+  if(!c) return;
+  c.width=innerWidth; c.height=innerHeight;
+  const cx=c.getContext('2d');
+  const pieces = Array.from({length:130},()=>({
+    x:Math.random()*c.width, y:-20-Math.random()*c.height*.5,
+    w:6+Math.random()*10, h:5+Math.random()*7,
+    color:['#5b9bd5','#f4a7c0','#2ecfa8','#f7c948','#7c6af7','#fff'][Math.floor(Math.random()*6)],
+    rot:Math.random()*360, rs:(Math.random()-.5)*7,
+    vx:(Math.random()-.5)*3, vy:2+Math.random()*4, alpha:1
+  }));
+  let f=0;
+  function draw(){
+    cx.clearRect(0,0,c.width,c.height);
+    pieces.forEach(p=>{
+      if(f>100) p.alpha=Math.max(0,p.alpha-.018);
+      cx.save(); cx.globalAlpha=p.alpha; cx.translate(p.x,p.y); cx.rotate(p.rot*Math.PI/180);
+      cx.fillStyle=p.color; cx.fillRect(-p.w/2,-p.h/2,p.w,p.h); cx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.rs;
+    });
+    f++;
+    if(f<160) requestAnimationFrame(draw);
+    else cx.clearRect(0,0,c.width,c.height);
+  }
+  draw();
+}
+
+// ═══════════════ BELL SOUND ═══════════════
+function playBell(){
+  try{
+    const a=new(window.AudioContext||window.webkitAudioContext)();
+    const o=a.createOscillator(), g=a.createGain();
+    o.connect(g); g.connect(a.destination);
+    o.frequency.value=880; o.type='sine';
+    g.gain.setValueAtTime(.4,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,a.currentTime+1.6);
+    o.start(); o.stop(a.currentTime+1.6);
+  }catch(e){}
+}
+
+// ═══════════════ POMODORO ═══════════════
+const POMO_MODES = { work:25*60, short:5*60, long:15*60 };
+const POMO_QUOTES = [
+  '"You are building something beautiful, Jovie. Session by session. 🌸"',
+  '"Focus on one thing. Just this session. 💙"',
+  '"Every focused minute is a step closer to your dream. 🌟"',
+  '"The nurse you\'re becoming is worth every focused minute. 🩺"',
+  '"All is well. Breathe. Focus. You\'ve got this. ✨"',
+  '"Small progress is still progress. Keep going. 💪"',
+  '"Rest is part of the process. You earned this break. ☕"',
+  '"Your future patients will thank you for studying today. 🏥"',
+];
+let pMode='work', pTime=POMO_MODES.work, pRunning=false, pInterval=null;
+let pSession=1, pTotalS=0, pTotalM=0, pBreaks=0;
+let eyeInterval=null, eyeLeft=20*60;
+
+function updatePomoConfig(){
+  POMO_MODES.work = (parseInt($('p-work').value)||25)*60;
+  POMO_MODES.short = (parseInt($('p-break').value)||5)*60;
+  if(!pRunning){ pTime=POMO_MODES[pMode]; renderPomo(); }
+}
+
+function setMode(mode, btn){
+  pMode=mode; pTime=POMO_MODES[mode];
+  if(pRunning){ clearInterval(pInterval); pRunning=false; $('pomo-play').textContent='▶'; clearInterval(eyeInterval); $('eye-timer').textContent=''; }
+  document.querySelectorAll('.pomo-mode-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const phases={work:'FOCUS TIME',short:'SHORT BREAK ☕',long:'LONG BREAK 🌸'};
+  $('pomo-phase').textContent=phases[mode];
+  const ring=$('pomo-ring');
+  ring.style.stroke = mode==='work'?'rgba(255,255,255,.85)':'#f4a7c0';
+  renderPomo();
+}
+
+function togglePomo(){
+  if(pRunning){
+    clearInterval(pInterval); pRunning=false;
+    $('pomo-play').textContent='▶';
+    clearInterval(eyeInterval); $('eye-timer').textContent='';
+  } else {
+    pRunning=true; $('pomo-play').textContent='⏸';
+    $('pomo-quote').textContent=POMO_QUOTES[Math.floor(Math.random()*POMO_QUOTES.length)];
+    if(pMode==='work') startEye();
+    pInterval=setInterval(()=>{
+      pTime--;
+      renderPomo();
+      if(pTime<=0){ clearInterval(pInterval); pRunning=false; $('pomo-play').textContent='▶'; clearInterval(eyeInterval); $('eye-timer').textContent=''; onPomoEnd(); }
+    },1000);
+  }
+}
+
+function onPomoEnd(){
+  playBell();
+  if(pMode==='work'){
+    pTotalS++; pTotalM+=Math.floor(POMO_MODES.work/60);
+    $('p-total-s').textContent=pTotalS; $('p-total-m').textContent=pTotalM;
+    launchConfetti();
+    toast('🎉 Session complete! Take a well-earned break, Jovie! 💙');
+    updateDots();
+    pSession=(pSession%4)+1;
+    $('pomo-session-info').textContent=`SESSION ${pSession} OF 4`;
+    setTimeout(()=>{ const btn=document.querySelector('.pomo-mode-btn:nth-child('+(pSession%4===0?3:2)+')'); setMode(pSession%4===0?'long':'short',btn); },1200);
+  } else {
+    pBreaks++; $('p-breaks').textContent=pBreaks;
+    toast('☕ Break over! Ready to focus again, Jovie? 💙');
+    setTimeout(()=>{ setMode('work',document.querySelector('.pomo-mode-btn')); },1200);
+  }
+}
+
+function resetPomo(){ clearInterval(pInterval); pRunning=false; pTime=POMO_MODES[pMode]; $('pomo-play').textContent='▶'; clearInterval(eyeInterval); $('eye-timer').textContent=''; renderPomo(); }
+function skipPomo(){ clearInterval(pInterval); pRunning=false; pTime=0; $('pomo-play').textContent='▶'; onPomoEnd(); }
+
+function renderPomo(){
+  const m=Math.floor(pTime/60), s=pTime%60;
+  $('pomo-time').textContent=`${pad(m)}:${pad(s)}`;
+  const total=POMO_MODES[pMode];
+  const circ=565;
+  $('pomo-ring').style.strokeDashoffset=circ*(pTime/total);
+}
+
+function updateDots(){
+  for(let i=0;i<4;i++){
+    const d=$('pd'+i);
+    if(d) d.classList.toggle('done',i<pSession-1);
+  }
+}
+
+function startEye(){
+  eyeLeft=20*60; clearInterval(eyeInterval);
+  eyeInterval=setInterval(()=>{
+    eyeLeft--;
+    $('eye-timer').textContent=eyeLeft>0?`👁️ Eye break in: ${pad(Math.floor(eyeLeft/60))}:${pad(eyeLeft%60)}`:'';
+    if(eyeLeft<=0){ toast('👁️ 20-20-20! Look 20 feet away for 20 seconds! 🌿'); eyeLeft=20*60; }
+  },1000);
+}
+renderPomo();
+
+// ═══════════════ BREATHING ═══════════════
+const BTECHS = {
+  box:  { name:'Box Breathing (4-4-4-4)', phases:[{l:'Breathe In 🌬️',d:4},{l:'Hold 🤲',d:4},{l:'Breathe Out 💨',d:4},{l:'Hold Empty 🌿',d:4}] },
+  '478':{ name:'4-7-8 Technique',         phases:[{l:'Breathe In 🌬️',d:4},{l:'Hold 🤲',d:7},{l:'Breathe Out 💨',d:8}] },
+  deep: { name:'Deep Belly Breathing',    phases:[{l:'Deep Inhale 🌊',d:5},{l:'Hold Gently',d:2},{l:'Exhale Slowly 💨',d:6}] },
+};
+let bTech='box', bRunning=false, bInterval=null, bPhase=0, bCycles=0, bMinsInt=null, bTotalSecs=0;
+
+function setBTech(t,btn){
+  bTech=t; stopBreathe();
+  document.querySelectorAll('.breathe-tech-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  $('breathe-instruction').textContent=BTECHS[t].phases[0].l;
+  $('breathe-sublabel').textContent=BTECHS[t].name;
+  $('breathe-count').textContent=BTECHS[t].phases[0].d;
+}
+
+function startBreathe(){
+  if(bRunning) return;
+  bRunning=true; bPhase=0;
+  $('b-start-btn').textContent='🌬️ Running...';
+  $('breathe-circle').classList.add('pulsing');
+  bMinsInt=setInterval(()=>{ bTotalSecs++; if(bTotalSecs%60===0){ $('b-mins').textContent=Math.floor(bTotalSecs/60); } },1000);
+  runBPhase();
+}
+
+function runBPhase(){
+  if(!bRunning) return;
+  const tech=BTECHS[bTech];
+  const phase=tech.phases[bPhase];
+  $('breathe-instruction').textContent=phase.l;
+  let rem=phase.d;
+  $('breathe-count').textContent=rem;
+  clearInterval(bInterval);
+  bInterval=setInterval(()=>{
+    rem--;
+    $('breathe-count').textContent=rem;
+    if(rem<=0){
+      clearInterval(bInterval);
+      bPhase++;
+      if(bPhase>=tech.phases.length){
+        bPhase=0; bCycles++;
+        $('b-cycles').textContent=bCycles;
+        if(bCycles%3===0) nextCalmQuote();
+      }
+      if(bRunning) runBPhase();
+    }
+  },1000);
+}
+
+function stopBreathe(){
+  bRunning=false; clearInterval(bInterval); clearInterval(bMinsInt);
+  $('b-start-btn').textContent='🌬️ Start';
+  $('breathe-circle').classList.remove('pulsing');
+  $('breathe-instruction').textContent='Breathe In 🌬️';
+  $('breathe-sublabel').textContent='Press Start to begin';
+  $('breathe-count').textContent=BTECHS[bTech].phases[0].d;
+}
+
+// ═══════════════ OCEAN WAVES ═══════════════
+let oceanCtx=null, oceanNodes=[], oceanOn=false;
+function toggleOcean(){
+  const btn=$('ocean-btn');
+  if(oceanOn){
+    oceanNodes.forEach(n=>{try{n.stop();}catch(e){}});
+    oceanNodes=[]; if(oceanCtx){oceanCtx.close();oceanCtx=null;}
+    oceanOn=false; btn.textContent='🌊 Ocean Waves';
+  } else {
+    try{
+      oceanCtx=new(window.AudioContext||window.webkitAudioContext)();
+      function makeWave(freq,gain){
+        const buf=oceanCtx.createBuffer(1,oceanCtx.sampleRate*4,oceanCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.sin(i/oceanCtx.sampleRate*freq*Math.PI);
+        const src=oceanCtx.createBufferSource(); src.buffer=buf; src.loop=true;
+        const g=oceanCtx.createGain(); g.gain.value=gain;
+        const f=oceanCtx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=580;
+        src.connect(f); f.connect(g); g.connect(oceanCtx.destination);
+        src.start(); return src;
+      }
+      oceanNodes.push(makeWave(.3,.11),makeWave(.5,.07),makeWave(.15,.05));
+      oceanOn=true; btn.textContent='🔇 Stop Ocean';
+      toast('🌊 Ocean waves playing... relax, Jovie 💙');
+    }catch(e){ toast('🔇 Audio not supported in this browser.'); }
+  }
+}
+
+// ═══════════════ CALM QUOTES ═══════════════
+const CALM_QUOTES=[
+  {t:'All is well. You are safe. You are loved. 💙',a:'— For Jovie, always'},
+  {t:'Aal izz well. Even when it doesn\'t feel like it yet.',a:'— 3 Idiots ✨'},
+  {t:'Breathe. You have survived every hard moment so far.',a:'— A reminder 🌸'},
+  {t:'You are not your stress. You are the calm within it.',a:'— Mindfulness 🧘'},
+  {t:'One breath at a time. That\'s all you ever need.',a:'— For nurses 🩺'},
+  {t:'Their rudeness is about them — not your worth.',a:'— For Jovie 💕'},
+  {t:'You are more than enough. Always have been.',a:'— From someone who loves you 💙'},
+  {t:'The storm will pass. Rest in the eye of it.',a:'— Nature 🌊'},
+  {t:'Caring for yourself is part of caring for others.',a:'— Nursing wisdom 🌸'},
+  {t:'Peace is the calm you carry inside, not the absence of chaos.',a:'— Mindfulness ✨'},
+  {t:'You don\'t have to be perfect. You just have to keep going.',a:'— For Jovie 💙'},
+  {t:'After every storm comes calm. Hold on, beautiful.',a:'— For Jovie 🌊'},
+];
+let cqIdx=0;
+function nextCalmQuote(){
+  cqIdx=(cqIdx+1)%CALM_QUOTES.length;
+  const q=CALM_QUOTES[cqIdx];
+  const box=$('calm-quote-box');
+  box.style.opacity='0';
+  setTimeout(()=>{ $('calm-qt').textContent=`"${q.t}"`; $('calm-qa').textContent=q.a; box.style.opacity='1'; },320);
+}
+
+// ═══════════════ CHECKLIST ═══════════════
+function toggleCheck(el){
+  el.classList.toggle('done');
+  el.querySelector('.check-box').textContent=el.classList.contains('done')?'✓':'';
+}
+function updateSCProgress(){
+  const all=document.querySelectorAll('#section-selfcare .check-item').length;
+  const done=document.querySelectorAll('#section-selfcare .check-item.done').length;
+  $('sc-progress').textContent=`${done} / ${all} completed`;
+  $('sc-fill').style.width=(all?(done/all*100):0)+'%';
+}
+
+// ═══════════════ SLEEP BAR ═══════════════
+function updateSleep(v){ $('j-sleep-val').textContent=v+'h'; $('j-sleep-bar').style.width=(v/12*100)+'%'; }
+
+// ═══════════════ VITALS ═══════════════
+const VITAL_RANGES={
+  BP:{ok:v=>{const p=v.split('/');return p.length===2&&+p[0]>=90&&+p[0]<=120&&+p[1]>=60&&+p[1]<=80;}},
+  HR:{ok:v=>+v>=60&&+v<=100}, TEMP:{ok:v=>+v>=36.1&&+v<=37.2},
+  SPO2:{ok:v=>+v>=95&&+v<=100}, BGL:{ok:v=>+v>=70&&+v<=100}, RR:{ok:v=>+v>=12&&+v<=20}
+};
+function checkVital(inp,key){
+  const v=inp.value.trim(), el=$('vs-'+key);
+  if(!v){el.textContent='—';return;}
+  const r=VITAL_RANGES[key];
+  el.textContent=r&&r.ok(v)?'✅':'⚠️';
+}
+const vHistory=[];
+function saveVitals(){
+  const entry={dt:$('v-datetime').value,label:$('v-label').value||'Vitals Check',notes:$('v-notes').value,readings:{}};
+  document.querySelectorAll('.vital-input').forEach(inp=>{entry.readings[inp.dataset.vital]=inp.value||'—';});
+  vHistory.unshift(entry);
+  const el=$('vitals-history');
+  el.innerHTML=vHistory.map(e=>`<div style="padding:12px 14px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:8px;"><div style="display:flex;justify-content:space-between;margin-bottom:5px;"><strong style="font-size:13px;">${e.label}</strong><span style="font-size:11px;color:var(--muted);">${e.dt}</span></div><div style="display:flex;flex-wrap:wrap;gap:7px;">${Object.entries(e.readings).map(([k,v])=>`<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>${k}:</strong> ${v}</span>`).join('')}</div>${e.notes?`<div style="font-size:12px;color:var(--text2);margin-top:5px;">📝 ${e.notes}</div>`:''}</div>`).join('');
+  toast('💙 Vitals saved!');
+  fetch("{% url 'nurse:save_vitals' %}",{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(entry)});
+}
+
+// ═══════════════ JOURNAL ═══════════════
+const jHistory=[];
+function saveJournal(){
+  const entry={date:$('j-date').value,sleep:$('j-sleep-val').textContent,energy:$('j-energy').value,water:$('j-water').value,nutrition:$('j-nutrition').value,feelings:$('j-feelings').value};
+  jHistory.unshift(entry);
+  const el=$('journal-history');
+  el.innerHTML=jHistory.map(e=>`<div style="padding:13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:9px;"><div style="display:flex;justify-content:space-between;margin-bottom:6px;"><strong>${e.date}</strong><span style="font-size:11px;color:var(--muted);">${e.energy}</span></div><div style="display:flex;gap:12px;font-size:11px;color:var(--text2);margin-bottom:6px;"><span>😴 ${e.sleep}</span><span>💧 ${e.water}g</span></div>${e.feelings?`<div style="font-size:13px;font-style:italic;border-left:3px solid var(--blue);padding-left:9px;">"${e.feelings}"</div>`:''}</div>`).join('');
+  $('j-feelings').value=''; $('j-nutrition').value='';
+  toast('📓 Journal entry saved!');
+  fetch("{% url 'nurse:save_journal' %}",{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(entry)});
+}
+
+// ═══════════════ STRESS ═══════════════
+const sLevels={};
+function setStress(key,level,dot){
+  sLevels[key]=level;
+  const dots=dot.parentElement.querySelectorAll('.stress-dot');
+  dots.forEach((d,i)=>{ d.className='stress-dot'; if(i<level) d.classList.add('s'+(i+1)); });
+}
+const stHistory=[];
+function saveStress(){
+  const entry={date:$('st-date').value,gm:sLevels['gm']||0,gmNote:$('st-gm-note').value,overall:$('st-overall').value,notes:$('st-notes').value,helped:$('st-helped').value};
+  stHistory.unshift(entry);
+  const labels=['','😌 Very Calm','🙂 Fine','😐 Moderate','😟 Stressed','😰 Overwhelmed'];
+  const el=$('stress-history');
+  el.innerHTML=stHistory.map(e=>`<div style="padding:11px 13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:7px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><strong style="font-size:13px;">${e.date}</strong><span style="font-size:11px;">${labels[e.overall]||''}</span></div>${e.gm?`<div style="font-size:11px;color:var(--text2);">😤 Groupmates: ${'●'.repeat(e.gm)}${'○'.repeat(5-e.gm)}</div>`:''} ${e.notes?`<div style="font-size:12px;color:var(--text2);margin-top:3px;">📝 ${e.notes}</div>`:''}</div>`).join('');
+  $('st-notes').value=''; $('st-helped').value='';
+  toast('🌸 Stress log saved. You\'re doing amazing, Jovie!');
+  fetch("{% url 'nurse:save_stress' %}",{method:'POST',headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},body:JSON.stringify(entry)});
+}
+
+// ═══════════════ GOALS ═══════════════
+let gCount=5;
+function toggleGoal(el){ el.textContent=el.textContent==='⭕'?'✅':'⭕'; }
+function addGoal(){
+  const inp=$('new-goal'), txt=inp.value.trim(); if(!txt) return;
+  gCount++;
+  const div=document.createElement('div'); div.className='goal-item';
+  div.innerHTML=`<div class="goal-num">${gCount}</div><div style="flex:1;"><div class="goal-title">${txt}</div><div class="goal-sub">Personal Goal — ${new Date().toLocaleDateString()}</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span>`;
+  $('goals-list').appendChild(div); inp.value=''; toast('🌟 New goal added!');
+}
+
+// ═══════════════ ABBREVIATIONS ═══════════════
+function filterAbbr(inp){
+  const q=inp.value.toLowerCase();
+  document.querySelectorAll('#abbr-grid .abbr-item').forEach(el=>{
+    el.style.display=(el.dataset.abbr.includes(q)||el.dataset.meaning.includes(q))?'':'none';
+  });
+}
+
+// ═══════════════ PHOTOS ═══════════════
+function addPhoto(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const prev=$('photo-preview'); prev.src=ev.target.result; prev.style.display='block';
+    const img=document.createElement('img');
+    img.src=ev.target.result;
+    img.onclick=()=>window.open(ev.target.result);
+    $('photo-gallery').appendChild(img);
+    toast('📷 Photo added! 🌸');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ═══════════════ FAB ═══════════════
+let fabOpen=false;
+function toggleFab(){ fabOpen=!fabOpen; $('fab-menu').classList.toggle('open',fabOpen); $('fab-btn').textContent=fabOpen?'✕':'＋'; }
+function closeFab(){ fabOpen=false; $('fab-menu').classList.remove('open'); $('fab-btn').textContent='＋'; }
+</script>
+</body>
+</html>

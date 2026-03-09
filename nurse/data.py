@@ -1,0 +1,77 @@
+NURSING_TIPS = [
+    "Always double-check medication doses before administering — safety first, always. 💙",
+    "Document everything in real time. Memory fades, but records don't.",
+    "Wash hands before and after every patient contact — it's your first line of defense.",
+    "Use SBAR (Situation, Background, Assessment, Recommendation) for clear handoffs.",
+    "Check your patient's armband AND ask their name — two identifiers, every time.",
+    "Trust your gut. If something feels off about a patient, escalate immediately.",
+    "Take your breaks. You can't pour from an empty cup.",
+    "When in doubt about a medication, look it up. Never guess.",
+    "Reposition bedridden patients every 2 hours to prevent pressure injuries.",
+    "Always explain what you're doing to your patient — it builds trust and reduces anxiety.",
+    "Normal adult BP: 90–120 / 60–80 mmHg. Know your baselines.",
+    "SpO2 below 94%? That's your cue to act fast.",
+    "Normal fasting blood glucose: 70–100 mg/dL.",
+    "Resting heart rate: 60–100 bpm for adults.",
+    "Your stethoscope is your most personal tool — keep it clean and close.",
+]
+
+MEDICAL_ABBREVIATIONS = [
+    {"abbr": "BP", "meaning": "Blood Pressure"},
+    {"abbr": "HR", "meaning": "Heart Rate"},
+    {"abbr": "RR", "meaning": "Respiratory Rate"},
+    {"abbr": "SpO2", "meaning": "Oxygen Saturation (Pulse Oximeter)"},
+    {"abbr": "BGL", "meaning": "Blood Glucose Level (Glucometer)"},
+    {"abbr": "NPO", "meaning": "Nothing by Mouth (Nil Per Os)"},
+    {"abbr": "PRN", "meaning": "As Needed (Pro Re Nata)"},
+    {"abbr": "STAT", "meaning": "Immediately"},
+    {"abbr": "IV", "meaning": "Intravenous"},
+    {"abbr": "IM", "meaning": "Intramuscular"},
+    {"abbr": "SQ/SC", "meaning": "Subcutaneous"},
+    {"abbr": "PO", "meaning": "By Mouth (Per Os)"},
+    {"abbr": "SOB", "meaning": "Shortness of Breath"},
+    {"abbr": "LOC", "meaning": "Level of Consciousness"},
+    {"abbr": "GCS", "meaning": "Glasgow Coma Scale"},
+    {"abbr": "Hx", "meaning": "History"},
+    {"abbr": "Dx", "meaning": "Diagnosis"},
+    {"abbr": "Tx", "meaning": "Treatment"},
+    {"abbr": "Rx", "meaning": "Prescription"},
+    {"abbr": "SBAR", "meaning": "Situation, Background, Assessment, Recommendation"},
+    {"abbr": "ADL", "meaning": "Activities of Daily Living"},
+    {"abbr": "DNR", "meaning": "Do Not Resuscitate"},
+    {"abbr": "ICU", "meaning": "Intensive Care Unit"},
+    {"abbr": "ER/ED", "meaning": "Emergency Room / Emergency Department"},
+]
+
+NURSE_QUOTES = [
+    "Nurses dispense comfort, compassion, and caring without even a prescription.",
+    "The character of a nurse is as important as the knowledge she holds.",
+    "To do what nobody else will do, in a way that nobody else can — that is what it means to be a nurse.",
+    "Nurses are the heart of healthcare.",
+    "Caring is the essence of nursing.",
+    "A nurse will always give us hope, an angel with a stethoscope.",
+    "You treat a disease, you win or you lose. You treat a person, you'll win no matter what the outcome.",
+    "The trained nurse has become one of the great blessings of humanity.",
+]
+
+SELF_CARE_ITEMS = [
+    {"icon": "💧", "text": "Drink 8 glasses of water today"},
+    {"icon": "😴", "text": "Sleep at least 7–8 hours tonight"},
+    {"icon": "🥗", "text": "Eat a proper meal before your shift"},
+    {"icon": "🧘", "text": "Take 5 minutes to breathe and reset"},
+    {"icon": "🚶", "text": "Walk or stretch for 10 minutes"},
+    {"icon": "📵", "text": "Put the phone down for 30 minutes"},
+    {"icon": "💙", "text": "Say something kind to yourself today"},
+    {"icon": "✍️", "text": "Write down 3 things you're grateful for"},
+    {"icon": "🎵", "text": "Listen to a song that makes you happy"},
+    {"icon": "🛁", "text": "Take a relaxing bath or shower after shift"},
+]
+
+VITAL_SIGNS_NORMAL = {
+    "BP": {"label": "Blood Pressure (Sphygmomanometer)", "normal": "90–120 / 60–80 mmHg", "icon": "🩺"},
+    "HR": {"label": "Heart Rate (Stethoscope)", "normal": "60–100 bpm", "icon": "❤️"},
+    "TEMP": {"label": "Temperature", "normal": "36.1–37.2 °C", "icon": "🌡️"},
+    "SPO2": {"label": "Oxygen Saturation (Pulse Oximeter)", "normal": "95–100 %", "icon": "💙"},
+    "BGL": {"label": "Blood Glucose (Glucometer)", "normal": "70–100 mg/dL (fasting)", "icon": "🩸"},
+    "RR": {"label": "Respiratory Rate", "normal": "12–20 breaths/min", "icon": "🌬️"},
+}
