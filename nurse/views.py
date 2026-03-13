@@ -12,10 +12,13 @@ from .models import VitalSign, JournalEntry, StressLog, SelfCareLog, DailyRoutin
 # DASHBOARD
 # ═══════════════════════════════════════
 def dashboard(request):
-    # Get latest records for display
-    latest_vitals = VitalSign.objects.first()
-    latest_journal = JournalEntry.objects.first()
-    recent_stress = StressLog.objects.first()
+    # Get records from database
+    all_vitals = VitalSign.objects.all()[:10]
+    all_journals = JournalEntry.objects.all()[:10]
+    all_stress = StressLog.objects.all()[:10]
+    all_routines_morning = DailyRoutine.objects.filter(routine_type='morning')
+    all_routines_study = DailyRoutine.objects.filter(routine_type='study')
+    all_routines_night = DailyRoutine.objects.filter(routine_type='night')
 
     context = {
         'tip': random.choice(NURSING_TIPS),
@@ -23,9 +26,13 @@ def dashboard(request):
         'self_care': SELF_CARE_ITEMS,
         'abbreviations': MEDICAL_ABBREVIATIONS,
         'vitals_normal': VITAL_SIGNS_NORMAL,
-        'latest_vitals': latest_vitals,
-        'latest_journal': latest_journal,
-        'recent_stress': recent_stress,
+        # Database history
+        'all_vitals': all_vitals,
+        'all_journals': all_journals,
+        'all_stress': all_stress,
+        'routines_morning': all_routines_morning,
+        'routines_study': all_routines_study,
+        'routines_night': all_routines_night,
     }
     return render(request, 'nurse/dashboard.html', context)
 

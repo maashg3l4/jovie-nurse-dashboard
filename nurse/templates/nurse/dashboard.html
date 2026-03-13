@@ -400,7 +400,31 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div class="card">
       <div class="card-title">📊 Vitals History</div>
-      <div id="vitals-history"><p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No logs yet 🩺</p></div>
+      <div id="vitals-history">
+  {% if all_vitals %}
+    {% for vital in all_vitals %}
+    <div style="padding:12px 14px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <strong style="font-size:13px;">{{ vital.label }}</strong>
+        <span style="font-size:11px;color:var(--muted);">{{ vital.date_time|date:"M d, Y H:i" }}</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:7px;">
+        {% if vital.bp %}<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>BP:</strong> {{ vital.bp }}</span>{% endif %}
+        {% if vital.hr %}<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>HR:</strong> {{ vital.hr }}</span>{% endif %}
+        {% if vital.temp %}<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>Temp:</strong> {{ vital.temp }}</span>{% endif %}
+        {% if vital.spo2 %}<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>SpO2:</strong> {{ vital.spo2 }}</span>{% endif %}
+        {% if vital.bgl %}<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>BGL:</strong> {{ vital.bgl }}</span>{% endif %}
+        {% if vital.rr %}<span style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:3px 10px;font-size:11px;"><strong>RR:</strong> {{ vital.rr }}</span>{% endif %}
+      </div>
+      {% if vital.notes %}
+      <div style="font-size:12px;color:var(--text2);margin-top:5px;">📝 {{ vital.notes }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No vitals logged yet 🩺<br><span style="font-size:11px;">Your history will appear here forever! 💙</span></p>
+  {% endif %}
+</div>
     </div>
   </div>
 
@@ -443,7 +467,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       <div>
         <div class="card">
           <div class="card-title">📚 Journal History</div>
-          <div id="journal-history"><p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No entries yet 📓</p></div>
+          <div id="journal-history">
+  {% if all_journals %}
+    {% for entry in all_journals %}
+    <div style="padding:13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+        <strong style="font-size:13px;">{{ entry.date|date:"M d, Y" }}</strong>
+        <span style="font-size:11px;color:var(--muted);">{{ entry.energy }}</span>
+      </div>
+      <div style="display:flex;gap:12px;font-size:11px;color:var(--text2);margin-bottom:6px;">
+        <span>😴 {{ entry.sleep_hours }}h sleep</span>
+        <span>💧 {{ entry.water_glasses }} glasses</span>
+      </div>
+      {% if entry.nutrition %}
+      <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">🥗 {{ entry.nutrition }}</div>
+      {% endif %}
+      {% if entry.feelings %}
+      <div style="font-size:13px;font-style:italic;border-left:3px solid var(--blue);padding-left:9px;">"{{ entry.feelings }}"</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No entries yet 📓<br><span style="font-size:11px;">Your journal will be saved here forever! 💙</span></p>
+  {% endif %}
+</div>
         </div>
         <div class="quote-card">
           <div class="quote-text">"Rest is not a reward for finishing. Rest is part of how you finish well."</div>
@@ -513,7 +560,41 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
         </div>
         <div class="card">
           <div class="card-title">📊 Stress History</div>
-          <div id="stress-history"><p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No logs yet 🧘</p></div>
+          <div id="stress-history">
+  {% if all_stress %}
+    {% for log in all_stress %}
+    <div style="padding:11px 13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:7px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <strong style="font-size:13px;">{{ log.date|date:"M d, Y" }}</strong>
+        <span style="font-size:11px;">
+          {% if log.overall_level == 1 %}😌 Very Calm
+          {% elif log.overall_level == 2 %}🙂 Mostly Fine
+          {% elif log.overall_level == 3 %}😐 Moderate
+          {% elif log.overall_level == 4 %}😟 Stressed
+          {% elif log.overall_level == 5 %}😰 Overwhelmed
+          {% endif %}
+        </span>
+      </div>
+      {% if log.groupmates_level %}
+      <div style="font-size:11px;color:var(--text2);margin-bottom:3px;">
+        😤 Groupmates stress:
+        {% for i in "12345" %}
+          {% if forloop.counter <= log.groupmates_level %}●{% else %}○{% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if log.notes %}
+      <div style="font-size:12px;color:var(--text2);margin-top:3px;">📝 {{ log.notes }}</div>
+      {% endif %}
+      {% if log.what_helped %}
+      <div style="font-size:12px;color:var(--text2);margin-top:3px;">💆 {{ log.what_helped }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  {% else %}
+    <p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No stress logs yet 🧘<br><span style="font-size:11px;">Your logs will be saved here forever! 💙</span></p>
+  {% endif %}
+</div>
         </div>
       </div>
     </div>
