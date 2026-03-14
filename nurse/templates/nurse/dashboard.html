@@ -36,18 +36,180 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 @keyframes floatUp{0%{transform:translateY(0) scale(1);opacity:0;}10%{opacity:.7;}90%{opacity:.2;}100%{transform:translateY(-105vh) scale(1.1);opacity:0;}}
 
 /* SIDEBAR */
-.sidebar{width:260px;min-height:100vh;background:var(--sidebar);display:flex;flex-direction:column;padding:28px 18px;position:fixed;top:0;left:0;z-index:100;box-shadow:4px 0 24px rgba(45,111,163,.2);transition:transform .3s;}
-.s-logo{text-align:center;margin-bottom:28px;}
-.s-avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.25);border:3px solid rgba(255,255,255,.5);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px;}
-.s-name{color:#fff;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;line-height:1.3;}
-.s-role{color:rgba(255,255,255,.65);font-size:11px;margin-top:3px;}
-.nav-lbl{color:rgba(255,255,255,.45);font-size:10px;letter-spacing:2px;text-transform:uppercase;padding:0 10px;margin:14px 0 5px;}
-.nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:var(--rs);cursor:pointer;transition:all .2s;color:rgba(255,255,255,.78);font-size:13px;font-weight:500;margin-bottom:2px;}
-.nav-item:hover,.nav-item.active{background:rgba(255,255,255,.18);color:#fff;}
-.nav-icon{font-size:16px;width:20px;text-align:center;}
-.s-bottom{margin-top:auto;}
-.theme-btn{display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:var(--rs);cursor:pointer;color:rgba(255,255,255,.72);font-size:13px;background:rgba(255,255,255,.1);border:none;width:100%;font-family:'DM Sans',sans-serif;transition:all .2s;}
-.theme-btn:hover{background:rgba(255,255,255,.2);color:#fff;}
+/* ═══════════════════════════════════════
+   SIDEBAR 💙
+═══════════════════════════════════════ */
+.sidebar{
+  width:260px;
+  min-height:100vh;
+  background:var(--sidebar);
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  top:0;left:0;
+  z-index:100;
+  box-shadow:4px 0 24px rgba(45,111,163,.2);
+  transition:transform .4s ease, opacity .4s ease;
+  opacity:1;
+}
+.sidebar.collapsed{
+  transform:translateX(-260px);
+  opacity:0;
+  pointer-events:none;
+}
+
+/* TOGGLE BUTTON */
+/* TOGGLE BUTTON */
+.sidebar-toggle{
+  position:fixed;
+  top:14px;
+  left:268px;
+  width:28px;
+  height:28px;
+  background:var(--blue);
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:101;
+  transition:all .4s ease;
+  box-shadow:0 2px 8px rgba(45,111,163,.4);
+  color:white;
+  font-size:12px;
+}
+.sidebar-toggle:hover{
+  background:var(--blue-deep);
+  transform:scale(1.1);
+}
+.sidebar-toggle.closed{
+  left:14px;
+}
+
+/* SCROLLABLE AREA */
+.sidebar-scroll{
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding:8px 14px 16px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.3) transparent;
+  scroll-behavior:smooth;
+  max-height:calc(100vh - 140px);
+}
+.sidebar-scroll::-webkit-scrollbar{width:3px;}
+.sidebar-scroll::-webkit-scrollbar-track{background:transparent;}
+.sidebar-scroll::-webkit-scrollbar-thumb{
+  background:rgba(255,255,255,.2);
+  border-radius:100px;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb:hover{
+  background:rgba(255,255,255,.4);
+}
+
+/* TOP SECTION */
+.s-logo{
+  text-align:center;
+  padding:24px 14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.s-avatar{
+  width:64px;height:64px;
+  border-radius:50%;
+  background:rgba(255,255,255,.2);
+  border:3px solid rgba(255,255,255,.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  margin:0 auto 10px;
+  animation:avatarPulse 3s ease-in-out infinite;
+}
+@keyframes avatarPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.2);}
+  50%{box-shadow:0 0 0 8px rgba(255,255,255,.0);}
+}
+.s-name{
+  color:#fff;
+  font-family:'Playfair Display',serif;
+  font-size:14px;
+  font-weight:700;
+  line-height:1.3;
+}
+.s-role{
+  color:rgba(255,255,255,.6);
+  font-size:11px;
+  margin-top:4px;
+}
+
+/* NAV LABELS */
+.nav-lbl{
+  color:rgba(255,255,255,.4);
+  font-size:9px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:0 10px;
+  margin:16px 0 5px;
+}
+
+/* NAV ITEMS */
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px 13px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all .25s ease;
+  color:rgba(255,255,255,.7);
+  font-size:13px;
+  font-weight:500;
+  margin-bottom:2px;
+  position:relative;
+}
+.nav-item:hover{
+  background:rgba(255,255,255,.15);
+  color:white;
+  transform:translateX(4px);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+.nav-item.active{
+  background:rgba(255,255,255,.2);
+  color:white;
+  border:1px solid rgba(255,255,255,.15);
+}
+.nav-icon{
+  font-size:16px;
+  width:22px;
+  text-align:center;
+  flex-shrink:0;
+}
+
+/* BOTTOM */
+.s-bottom{
+  padding:14px;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.theme-btn{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:10px 13px;
+  border-radius:10px;
+  cursor:pointer;
+  color:rgba(255,255,255,.7);
+  font-size:13px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+  width:100%;
+  font-family:'DM Sans',sans-serif;
+  transition:all .25s;
+}
+.theme-btn:hover{
+  background:rgba(255,255,255,.18);
+  color:white;
+}
 
 /* MAIN */
 .main{margin-left:260px;flex:1;padding:28px;position:relative;z-index:2;}
@@ -485,6 +647,216 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   animation:sway 3s ease-in-out infinite;
 }
 
+/* ═══════════════════════════════════════
+   📋 DAILY ROUTINES STYLES
+═══════════════════════════════════════ */
+.routine-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.routine-tab{
+  padding:10px 22px;
+  border-radius:100px;
+  border:2px solid var(--border);
+  background:transparent;
+  color:var(--text2);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .3s;
+}
+.routine-tab.active{
+  border-color:var(--blue);
+  color:white;
+  background:linear-gradient(135deg,var(--blue),var(--blue-deep));
+  box-shadow:0 4px 15px rgba(91,155,213,.4);
+}
+.routine-tab:hover{
+  border-color:var(--blue);
+  color:var(--blue);
+}
+
+/* ROUTINE HEADER */
+.routine-header{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:18px 20px;
+  border-radius:var(--r);
+  margin-bottom:16px;
+}
+.morning-header{
+  background:linear-gradient(135deg,rgba(255,200,100,.15),rgba(255,160,80,.1));
+  border:1px solid rgba(255,180,80,.3);
+}
+.study-header{
+  background:linear-gradient(135deg,rgba(91,155,213,.15),rgba(45,111,163,.1));
+  border:1px solid rgba(91,155,213,.3);
+}
+.night-header{
+  background:linear-gradient(135deg,rgba(100,80,180,.15),rgba(60,40,120,.1));
+  border:1px solid rgba(120,100,200,.3);
+}
+.routine-header-icon{
+  font-size:32px;
+  flex-shrink:0;
+}
+.routine-header-title{
+  font-family:'Playfair Display',serif;
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:3px;
+}
+.routine-header-sub{
+  font-size:12px;
+  color:var(--text2);
+  font-style:italic;
+}
+.routine-progress-wrap{
+  margin-left:auto;
+  text-align:right;
+  min-width:80px;
+}
+.routine-progress-num{
+  font-size:13px;
+  font-weight:700;
+  color:var(--blue);
+  margin-bottom:5px;
+}
+.routine-progress-bar{
+  background:var(--border);
+  border-radius:100px;
+  height:7px;
+  overflow:hidden;
+  width:80px;
+}
+.routine-progress-fill{
+  height:100%;
+  border-radius:100px;
+  transition:width .4s ease;
+}
+.morning-fill{
+  background:linear-gradient(90deg,#f7c948,#f4a76c);
+}
+.study-fill{
+  background:linear-gradient(90deg,var(--blue),var(--blue-deep));
+}
+.night-fill{
+  background:linear-gradient(90deg,#9b7fd4,#6b4fa0);
+}
+
+/* ROUTINE TASKS */
+.routine-tasks{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:14px;
+}
+.routine-task{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 15px;
+  background:var(--surface2);
+  border-radius:var(--rs);
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  transition:all .25s;
+  user-select:none;
+}
+.routine-task:hover{
+  border-color:var(--blue-light);
+  transform:translateX(4px);
+}
+.routine-task.done{
+  opacity:.55;
+  border-color:var(--blue-light);
+  background:rgba(91,155,213,.05);
+}
+.routine-task.done .routine-task-text{
+  text-decoration:line-through;
+  color:var(--muted);
+}
+.routine-check{
+  width:20px;
+  height:20px;
+  border-radius:6px;
+  border:2px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  flex-shrink:0;
+  transition:all .25s;
+}
+.routine-task.done .routine-check{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:white;
+}
+.routine-task.done .routine-check::after{
+  content:'✓';
+}
+.routine-task-icon{
+  font-size:18px;
+  flex-shrink:0;
+}
+.routine-task-text{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text);
+  transition:all .25s;
+}
+
+/* ADD TASK */
+.routine-add-wrap{
+  display:flex;
+  gap:9px;
+  margin-top:8px;
+}
+.routine-add-input{
+  flex:1;
+  padding:9px 13px;
+  border-radius:var(--rs);
+  border:1.5px solid var(--border);
+  background:var(--surface2);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  outline:none;
+  transition:border-color .2s;
+}
+.routine-add-input:focus{
+  border-color:var(--blue);
+}
+.routine-add-btn{
+  padding:9px 18px;
+  border-radius:var(--rs);
+  border:none;
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  color:white;
+}
+.morning-btn{background:linear-gradient(135deg,#f7c948,#f4a76c);}
+.study-btn{background:linear-gradient(135deg,var(--blue),var(--blue-deep));}
+.night-btn{background:linear-gradient(135deg,#9b7fd4,#6b4fa0);}
+.routine-add-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+/* ROUTINE PANEL */
+.routine-panel{
+  animation:fadeIn .35s ease;
+}
+
 /* scrollbar */
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
@@ -498,34 +870,74 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
 
 <!-- ═══════════ SIDEBAR ═══════════ -->
-<aside class="sidebar">
+<!-- SIDEBAR TOGGLE BUTTON -->
+<button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">❮</button>
+
+<aside class="sidebar" id="sidebar">
+  <!-- TOP SECTION -->
   <div class="s-logo">
     <div class="s-avatar">🩺</div>
     <div class="s-name">Jovie Angela Martinez</div>
     <div class="s-role">Nursing Student ✨ Day Shift</div>
   </div>
 
-  <div class="nav-lbl">Main</div>
-  <div class="nav-item active" onclick="go('dashboard',this)"><span class="nav-icon">🏠</span> Dashboard</div>
-  <div class="nav-item" onclick="go('vitals',this)"><span class="nav-icon">❤️</span> Vital Signs Log</div>
-  <div class="nav-item" onclick="go('journal',this)"><span class="nav-icon">📓</span> Health Journal</div>
-  <div class="nav-item" onclick="go('stress',this)"><span class="nav-icon">🧘</span> Stress & Anxiety</div>
+  <!-- SCROLLABLE NAV -->
+  <div class="sidebar-scroll">
 
-  <div class="nav-lbl">Focus & Wellness</div>
-  <div class="nav-item" onclick="go('pomodoro',this)"><span class="nav-icon">🍅</span> Pomodoro Timer</div>
-  <div class="nav-item" onclick="go('breathe',this)"><span class="nav-icon">🌬️</span> Breathing & Calm</div>
-  <div class="nav-item" onclick="go('selfcare',this)"><span class="nav-icon">🌸</span> Self-Care Checklist</div>
-  <div class="nav-item" onclick="go('goals',this)"><span class="nav-icon">🌟</span> Goals & Achievements</div>
+    <div class="nav-lbl">Main</div>
+    <div class="nav-item active" onclick="go('dashboard',this)">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="go('vitals',this)">
+      <span class="nav-icon">❤️</span> Vital Signs Log
+    </div>
+    <div class="nav-item" onclick="go('journal',this)">
+      <span class="nav-icon">📓</span> Health Journal
+    </div>
+    <div class="nav-item" onclick="go('stress',this)">
+      <span class="nav-icon">🧘</span> Stress & Anxiety
+    </div>
 
-  <div class="nav-lbl">Resources</div>
-  <div class="nav-item" onclick="go('abbr',this)"><span class="nav-icon">📋</span> Medical Abbreviations</div>
-  <div class="nav-item" onclick="go('photos',this)"><span class="nav-icon">📷</span> My Photos</div>
+    <div class="nav-lbl">Focus & Wellness</div>
+    <div class="nav-item" onclick="go('pomodoro',this)">
+      <span class="nav-icon">🍅</span> Pomodoro Timer
+    </div>
+    <div class="nav-item" onclick="go('breathe',this)">
+      <span class="nav-icon">🌬️</span> Breathing & Calm
+    </div>
+    <div class="nav-item" onclick="go('routines',this)">
+      <span class="nav-icon">📋</span> Daily Routines
+    </div>
+    <div class="nav-item" onclick="go('selfcare',this)">
+      <span class="nav-icon">🌸</span> Self-Care Checklist
+    </div>
+    <div class="nav-item" onclick="go('goals',this)">
+      <span class="nav-icon">🌟</span> Goals & Achievements
+    </div>
 
-  <div class="s-bottom">
-    <button class="theme-btn" onclick="toggleTheme()">
-      <span id="theme-icon">🌙</span> <span id="theme-lbl">Dark Mode</span>
-    </button>
+    <div class="nav-lbl">Love & Dreams 💕</div>
+    <div class="nav-item" onclick="go('dashboard',this);setTimeout(()=>document.getElementById('letter-section').scrollIntoView({behavior:'smooth'}),300)">
+      <span class="nav-icon">💌</span> Secret Letter
+    </div>
+    <div class="nav-item" onclick="go('photos',this)">
+      <span class="nav-icon">📷</span> Our Photos
+    </div>
+
+    <div class="nav-lbl">Resources</div>
+    <div class="nav-item" onclick="go('abbr',this)">
+      <span class="nav-icon">📋</span> Medical Abbreviations
+    </div>
+
+    <div class="nav-lbl">Settings</div>
+    <div class="nav-item" onclick="toggleTheme()">
+      <span class="nav-icon" id="theme-icon">🌙</span>
+      <span id="theme-lbl">Dark Mode</span>
+    </div>
+
   </div>
+
+</aside>
+
 </aside>
 
 <!-- ═══════════ MAIN ═══════════ -->
@@ -1040,6 +1452,223 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
   </div>
 
+<!-- ══ ROUTINES ══ -->
+<div id="section-routines" class="section">
+  <div class="card">
+    <div class="card-title">📋 Daily Routines</div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:18px;font-style:italic;">
+      "Take care of yourself my love — your health is my priority. 💙 You are a nurse who saves lives, but first save yourself. 🩺"
+    </p>
+
+    <!-- ROUTINE TABS -->
+    <div class="routine-tabs">
+      <button class="routine-tab active" onclick="switchRoutine('morning',this)">
+        ☀️ Morning
+      </button>
+      <button class="routine-tab" onclick="switchRoutine('study',this)">
+        📚 Study
+      </button>
+      <button class="routine-tab" onclick="switchRoutine('night',this)">
+        🌙 Night
+      </button>
+    </div>
+
+    <!-- MORNING ROUTINE -->
+    <div id="routine-morning" class="routine-panel active">
+      <div class="routine-header morning-header">
+        <div class="routine-header-icon">☀️</div>
+        <div>
+          <div class="routine-header-title">Morning Routine</div>
+          <div class="routine-header-sub">Start your day beautifully Angela 💙</div>
+        </div>
+        <div class="routine-progress-wrap">
+          <div class="routine-progress-num" id="morning-progress">0/6</div>
+          <div class="routine-progress-bar">
+            <div class="routine-progress-fill morning-fill" id="morning-fill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="routine-tasks" id="morning-tasks">
+        <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">☀️</span>
+          <span class="routine-task-text">Wake up & stretch</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">💧</span>
+          <span class="routine-task-text">Drink water</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🌸</span>
+          <span class="routine-task-text">Skincare routine</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🍳</span>
+          <span class="routine-task-text">Eat breakfast</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">📋</span>
+          <span class="routine-task-text">Review today's shift</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🧘</span>
+          <span class="routine-task-text">5 min meditation</span>
+        </div>
+      </div>
+      <div class="routine-add-wrap">
+        <input type="text" class="routine-add-input" placeholder="Add your own morning task..." id="morning-add-input">
+        <button class="routine-add-btn morning-btn" onclick="addRoutineTask('morning')">+ Add</button>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="saveRoutineProgress('morning')">💙 Save Morning Progress</button>
+    </div>
+
+    <!-- STUDY ROUTINE -->
+    <div id="routine-study" class="routine-panel" style="display:none;">
+      <div class="routine-header study-header">
+        <div class="routine-header-icon">📚</div>
+        <div>
+          <div class="routine-header-title">Study Routine</div>
+          <div class="routine-header-sub">You are becoming an amazing nurse! 🩺</div>
+        </div>
+        <div class="routine-progress-wrap">
+          <div class="routine-progress-num" id="study-progress">0/7</div>
+          <div class="routine-progress-bar">
+            <div class="routine-progress-fill study-fill" id="study-fill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="routine-tasks" id="study-tasks">
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🍅</span>
+          <span class="routine-task-text">Set Pomodoro timer</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">📖</span>
+          <span class="routine-task-text">Review nursing notes</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🩺</span>
+          <span class="routine-task-text">Practice vital signs</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">📋</span>
+          <span class="routine-task-text">Medical abbreviations</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🍵</span>
+          <span class="routine-task-text">Take matcha break</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">💧</span>
+          <span class="routine-task-text">Drink water</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">📝</span>
+          <span class="routine-task-text">Write summary notes</span>
+        </div>
+      </div>
+      <div class="routine-add-wrap">
+        <input type="text" class="routine-add-input" placeholder="Add your own study task..." id="study-add-input">
+        <button class="routine-add-btn study-btn" onclick="addRoutineTask('study')">+ Add</button>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="saveRoutineProgress('study')">💙 Save Study Progress</button>
+    </div>
+
+    <!-- NIGHT ROUTINE -->
+    <div id="routine-night" class="routine-panel" style="display:none;">
+      <div class="routine-header night-header">
+        <div class="routine-header-icon">🌙</div>
+        <div>
+          <div class="routine-header-title">Night Routine</div>
+          <div class="routine-header-sub">Rest well my love, you deserve it 💙</div>
+        </div>
+        <div class="routine-progress-wrap">
+          <div class="routine-progress-num" id="night-progress">0/9</div>
+          <div class="routine-progress-bar">
+            <div class="routine-progress-fill night-fill" id="night-fill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="routine-tasks" id="night-tasks">
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">📓</span>
+          <span class="routine-task-text">Write journal entry</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🌸</span>
+          <span class="routine-task-text">Self-care checklist</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">😤</span>
+          <span class="routine-task-text">Log stress level</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">⏰</span>
+          <span class="routine-task-text">Set tomorrow's alarm</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🙏</span>
+          <span class="routine-task-text">Gratitude note</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">💧</span>
+          <span class="routine-task-text">Drink water</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🛌</span>
+          <span class="routine-task-text">Skincare night routine</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🌙</span>
+          <span class="routine-task-text">No phone 30 mins before bed</span>
+        </div>
+        <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
+          <div class="routine-check"></div>
+          <span class="routine-task-icon">🤲</span>
+          <span class="routine-task-text">Pray time — a little to God 🙏</span>
+        </div>
+      </div>
+      <div class="routine-add-wrap">
+        <input type="text" class="routine-add-input" placeholder="Add your own night task..." id="night-add-input">
+        <button class="routine-add-btn night-btn" onclick="addRoutineTask('night')">+ Add</button>
+      </div>
+      <button class="btn btn-primary btn-sm" style="margin-top:12px;" onclick="saveRoutineProgress('night')">💙 Save Night Progress</button>
+    </div>
+
+  </div>
+
+  <!-- ROUTINE HISTORY -->
+  <div class="card">
+    <div class="card-title">📊 Routine History</div>
+    <div id="routine-history">
+      <p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">
+        No routine history yet 📋<br>
+        <span style="font-size:11px;">Your progress will be saved here forever! 💙</span>
+      </p>
+    </div>
+  </div>
+</div>
+
   <!-- ══ SELF-CARE ══ -->
   <div id="section-selfcare" class="section">
     <div class="card">
@@ -1281,6 +1910,171 @@ const $ = id => document.getElementById(id);
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
 function pad(n){ return String(n).padStart(2,'0'); }
 
+// ═══════════════════════════════════════
+// 📋 DAILY ROUTINES
+// ═══════════════════════════════════════
+const routineCounts = { morning:6, study:7, night:9 };
+
+function switchRoutine(type, btn){
+  // Hide all panels
+  document.querySelectorAll('.routine-panel').forEach(p=>{
+    p.style.display='none';
+    p.classList.remove('active');
+  });
+  // Remove active from all tabs
+  document.querySelectorAll('.routine-tab').forEach(t=>{
+    t.classList.remove('active');
+  });
+  // Show selected panel
+  const panel = document.getElementById('routine-'+type);
+  if(panel){ panel.style.display='block'; panel.classList.add('active'); }
+  // Activate tab
+  if(btn) btn.classList.add('active');
+}
+
+function toggleRoutineTask(el, type){
+  el.classList.toggle('done');
+  updateRoutineProgress(type);
+}
+
+function updateRoutineProgress(type){
+  const tasks = document.querySelectorAll('#routine-'+type+'-tasks .routine-task');
+  const done = document.querySelectorAll('#routine-'+type+'-tasks .routine-task.done');
+  const total = tasks.length;
+  const completed = done.length;
+  const pct = total ? (completed/total*100) : 0;
+
+  const progressNum = document.getElementById(type+'-progress');
+  const progressFill = document.getElementById(type+'-fill');
+
+  if(progressNum) progressNum.textContent = completed+'/'+total;
+  if(progressFill) progressFill.style.width = pct+'%';
+
+  // Celebration when all done! 🎉
+  if(completed === total && total > 0){
+    toast('🎉 Amazing Jovie! '+type.charAt(0).toUpperCase()+type.slice(1)+' routine complete! 💙');
+    launchConfetti();
+  }
+}
+
+function addRoutineTask(type){
+  const inp = document.getElementById(type+'-add-input');
+  const txt = inp ? inp.value.trim() : '';
+  if(!txt){ toast('Please type a task first! 💙'); return; }
+
+  const taskDiv = document.createElement('div');
+  taskDiv.className = 'routine-task';
+  taskDiv.onclick = function(){ toggleRoutineTask(this, type); };
+  taskDiv.innerHTML = `
+    <div class="routine-check"></div>
+    <span class="routine-task-icon">✨</span>
+    <span class="routine-task-text">${txt}</span>
+  `;
+
+  const tasksContainer = document.getElementById(type+'-tasks');
+  if(tasksContainer) tasksContainer.appendChild(taskDiv);
+
+  inp.value = '';
+  updateRoutineProgress(type);
+  toast('✨ Task added! 💙');
+
+  // Save to database
+  fetch('/api/routine/save/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify({
+      type: type,
+      task: txt,
+      completed: false,
+      order: tasksContainer ? tasksContainer.children.length : 0
+    })
+  });
+}
+
+function saveRoutineProgress(type){
+  const tasks = document.querySelectorAll('#routine-'+type+'-tasks .routine-task');
+  const completed = [];
+  const pending = [];
+
+  tasks.forEach(t=>{
+    const text = t.querySelector('.routine-task-text');
+    if(text){
+      if(t.classList.contains('done')){
+        completed.push(text.textContent);
+      } else {
+        pending.push(text.textContent);
+      }
+    }
+  });
+
+  const total = tasks.length;
+  const doneCount = completed.length;
+
+  // Save to database
+  fetch('/api/selfcare/save/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify({
+      completed: completed,
+      pending: pending,
+      total: doneCount,
+      type: type,
+      date: new Date().toISOString().split('T')[0]
+    })
+  }).then(r=>r.json()).then(data=>{
+    if(data.status === 'ok'){
+      toast('💙 '+type.charAt(0).toUpperCase()+type.slice(1)+' progress saved forever!');
+      loadRoutineHistory();
+    }
+  });
+}
+
+function loadRoutineHistory(){
+  fetch('/api/journal/get/')
+    .then(r=>r.json())
+    .then(data=>{
+      // Show routine history
+      const el = document.getElementById('routine-history');
+      if(!el) return;
+      if(data.entries && data.entries.length > 0){
+        el.innerHTML = data.entries.slice(0,5).map(e=>`
+          <div style="padding:11px 13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:7px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <strong style="font-size:13px;">📋 ${e.date}</strong>
+              <span style="font-size:11px;color:var(--muted);">${e.energy}</span>
+            </div>
+            <div style="font-size:12px;color:var(--text2);">
+              😴 ${e.sleep_hours}h sleep • 💧 ${e.water_glasses} glasses
+            </div>
+          </div>
+        `).join('');
+      }
+    });
+}
+
+// Load routine history on start
+loadRoutineHistory();
+
+// Reset routines at midnight 🌙
+function checkMidnightReset(){
+  const now = new Date();
+  const lastReset = localStorage.getItem('lastRoutineReset');
+  const today = now.toDateString();
+
+  if(lastReset !== today){
+    // Reset all routine tasks
+    document.querySelectorAll('.routine-task').forEach(t=>{
+      t.classList.remove('done');
+    });
+    ['morning','study','night'].forEach(type=>{
+      updateRoutineProgress(type);
+    });
+    localStorage.setItem('lastRoutineReset', today);
+  }
+}
+checkMidnightReset();
+setInterval(checkMidnightReset, 60000);
+
 // ═══════════════ DATES ═══════════════
 const now = new Date();
 $('pg-date').textContent = now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
@@ -1303,6 +2097,7 @@ const titles = {
   dashboard:'Good Morning, Jovie 💙', vitals:'Vital Signs Log 🩺',
   journal:'Health Journal 📓', stress:'Stress & Anxiety 🧘',
   pomodoro:'Pomodoro Focus Timer 🍅', breathe:'Breathing & Calm 🌬️',
+  routines:'Daily Routines 📋',
   selfcare:'Self-Care Checklist 🌸', goals:'Goals & Achievements 🌟',
   abbr:'Medical Abbreviations 📋', photos:"Jovie's Photo Gallery 📷"
 };
@@ -1311,6 +2106,28 @@ function go(name, navEl){
   document.getElementById('section-'+name).classList.add('active');
   $('pg-title').textContent = titles[name]||name;
   if(navEl){ document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); navEl.classList.add('active'); }
+}
+
+// ═══════════════════════════════════════
+// SIDEBAR TOGGLE 💙
+// ═══════════════════════════════════════
+let sidebarOpen = true;
+function toggleSidebar(){
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebar-toggle');
+  const main = document.querySelector('.main');
+  sidebarOpen = !sidebarOpen;
+  if(sidebarOpen){
+    sidebar.classList.remove('collapsed');
+    toggle.classList.remove('closed');
+    toggle.textContent = '❮';
+    if(main) main.style.marginLeft = '260px';
+  } else {
+    sidebar.classList.add('collapsed');
+    toggle.classList.add('closed');
+    toggle.textContent = '❯';
+    if(main) main.style.marginLeft = '0';
+  }
 }
 
 // ═══════════════ THEME ═══════════════
