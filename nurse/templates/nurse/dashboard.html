@@ -257,6 +257,234 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .hamburger{display:flex;}
 }
 
+/* ═══════════════════════════════════════
+   💌 SECRET LOVE LETTER STYLES
+═══════════════════════════════════════ */
+#sakura-canvas{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:0;opacity:0;
+  transition:opacity 1s ease;
+}
+#sakura-canvas.active{opacity:.6;}
+
+.letter-section{
+  margin-bottom:18px;
+  position:relative;
+  z-index:2;
+}
+
+/* LOCKED CARD */
+.letter-locked-wrap{
+  display:flex;
+  justify-content:center;
+}
+.letter-locked-card{
+  background:linear-gradient(135deg,rgba(91,155,213,.12) 0%,rgba(244,167,192,.12) 100%);
+  border:2px solid transparent;
+  background-clip:padding-box;
+  border-radius:24px;
+  padding:32px 28px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  width:100%;
+  max-width:580px;
+  box-shadow:0 0 40px rgba(91,155,213,.15),0 0 40px rgba(244,167,192,.1);
+  animation:letterGlow 3s ease-in-out infinite;
+}
+@keyframes letterGlow{
+  0%,100%{box-shadow:0 0 30px rgba(91,155,213,.2),0 0 30px rgba(244,167,192,.1);}
+  50%{box-shadow:0 0 60px rgba(91,155,213,.4),0 0 60px rgba(244,167,192,.3);}
+}
+.letter-locked-deco{
+  font-size:22px;
+  margin-bottom:16px;
+  animation:spin 4s linear infinite;
+}
+@keyframes spin{
+  0%,100%{transform:rotate(-10deg);}
+  50%{transform:rotate(10deg);}
+}
+
+/* ENVELOPE */
+.envelope-wrap{
+  margin:0 auto 20px;
+  width:110px;
+  cursor:pointer;
+  transition:transform .3s;
+}
+.envelope-wrap:hover{transform:scale(1.08);}
+.envelope{
+  position:relative;
+  width:110px;
+  height:80px;
+}
+.envelope-flap{
+  position:absolute;
+  top:0;left:0;
+  width:0;height:0;
+  border-left:55px solid transparent;
+  border-right:55px solid transparent;
+  border-top:40px solid #5b9bd5;
+  z-index:2;
+  transition:transform .5s ease;
+  transform-origin:top center;
+}
+.envelope-wrap:hover .envelope-flap{
+  transform:rotateX(180deg);
+}
+.envelope-body{
+  position:absolute;
+  bottom:0;left:0;
+  width:110px;height:70px;
+  background:linear-gradient(135deg,#a8ccee,#fce4ed);
+  border-radius:4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:2px solid rgba(91,155,213,.3);
+}
+.envelope-heart{
+  font-size:24px;
+  animation:heartbeat 1.5s ease-in-out infinite;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.2);}
+}
+
+/* LOCKED TEXT */
+.letter-locked-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  font-weight:700;
+  color:var(--blue-deep);
+  margin-bottom:6px;
+}
+[data-theme="dark"] .letter-locked-title{color:var(--blue-light);}
+.letter-locked-sub{
+  font-size:13px;
+  color:var(--text2);
+  margin-bottom:20px;
+  font-style:italic;
+}
+
+/* LETTER COUNTDOWN */
+.letter-countdown-wrap{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  margin-bottom:16px;
+}
+.letter-cd-unit{text-align:center;}
+.letter-cd-num{
+  font-size:28px;
+  font-weight:700;
+  font-family:'Playfair Display',serif;
+  background:linear-gradient(135deg,var(--blue),var(--pink));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.letter-cd-lbl{
+  font-size:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+.letter-locked-hint{
+  font-size:12px;
+  color:var(--muted);
+  font-style:italic;
+}
+
+/* UNLOCKED CARD */
+.letter-unlocked-wrap{
+  display:flex;
+  justify-content:center;
+}
+.letter-open-card{
+  background:var(--surface);
+  border-radius:24px;
+  padding:32px 28px;
+  width:100%;
+  max-width:680px;
+  box-shadow:0 0 60px rgba(91,155,213,.25),0 0 60px rgba(244,167,192,.2);
+  border:1px solid var(--border);
+  animation:letterAppear 1.5s ease forwards;
+}
+@keyframes letterAppear{
+  from{opacity:0;transform:translateY(30px) scale(.95);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.letter-open-header{
+  text-align:center;
+  margin-bottom:24px;
+}
+.letter-sakura-top{
+  font-size:20px;
+  margin-bottom:10px;
+  animation:sway 3s ease-in-out infinite;
+}
+@keyframes sway{
+  0%,100%{transform:translateX(-5px);}
+  50%{transform:translateX(5px);}
+}
+.letter-open-title{
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  font-weight:700;
+  color:var(--blue-deep);
+  margin-bottom:6px;
+}
+[data-theme="dark"] .letter-open-title{color:var(--blue-light);}
+.letter-open-sub{
+  font-size:12px;
+  color:var(--muted);
+  font-style:italic;
+}
+
+/* LETTER PAPER */
+.letter-paper{
+  background:linear-gradient(135deg,rgba(240,246,252,.8),rgba(252,228,237,.4));
+  border-radius:16px;
+  padding:28px;
+  border:1px solid var(--border);
+  margin-bottom:16px;
+}
+[data-theme="dark"] .letter-paper{
+  background:linear-gradient(135deg,rgba(19,35,56,.8),rgba(30,58,86,.4));
+}
+.letter-paper-content{
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  line-height:2;
+  color:var(--text);
+  white-space:pre-line;
+}
+.letter-signature{
+  margin-top:24px;
+  text-align:right;
+}
+.letter-sig-line{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border));
+  margin-bottom:10px;
+}
+.letter-sig-text{
+  font-family:'Playfair Display',serif;
+  font-size:15px;
+  font-style:italic;
+  color:var(--blue-deep);
+}
+[data-theme="dark"] .letter-sig-text{color:var(--blue-light);}
+.letter-bottom-sakura{
+  text-align:center;
+  font-size:18px;
+  margin-top:16px;
+  animation:sway 3s ease-in-out infinite;
+}
+
 /* scrollbar */
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
@@ -331,6 +559,75 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
       </div>
       <p style="margin-top:12px;font-size:12px;opacity:.7;">Every second apart makes the reunion sweeter 💙</p>
     </div>
+
+    <!-- ══════════════════════════════════
+     💌 SECRET LOVE LETTER
+══════════════════════════════════ -->
+<div class="letter-section" id="letter-section">
+
+  <!-- SAKURA CANVAS FOR LETTER -->
+  <canvas id="sakura-canvas"></canvas>
+
+  <!-- LOCKED STATE -->
+  <div id="letter-locked" class="letter-locked-wrap">
+    <div class="letter-locked-card">
+      <div class="letter-locked-deco">🌸</div>
+      <div class="envelope-wrap" id="envelope-wrap">
+        <div class="envelope">
+          <div class="envelope-flap"></div>
+          <div class="envelope-body">
+            <div class="envelope-heart">💙</div>
+          </div>
+        </div>
+      </div>
+      <div class="letter-locked-title">A Letter is Waiting For You 💌</div>
+      <div class="letter-locked-sub">Sealed with love, just for you Angela 🌸</div>
+      <div class="letter-countdown-wrap">
+        <div class="letter-cd-unit">
+          <div class="letter-cd-num" id="lcd-d">—</div>
+          <div class="letter-cd-lbl">Days</div>
+        </div>
+        <div class="letter-cd-unit">
+          <div class="letter-cd-num" id="lcd-h">—</div>
+          <div class="letter-cd-lbl">Hours</div>
+        </div>
+        <div class="letter-cd-unit">
+          <div class="letter-cd-num" id="lcd-m">—</div>
+          <div class="letter-cd-lbl">Minutes</div>
+        </div>
+        <div class="letter-cd-unit">
+          <div class="letter-cd-num" id="lcd-s">—</div>
+          <div class="letter-cd-lbl">Seconds</div>
+        </div>
+      </div>
+      <div class="letter-locked-hint">
+        ✨ This letter unlocks on March 22, 2026 ✨
+      </div>
+    </div>
+  </div>
+
+  <!-- UNLOCKED STATE -->
+  <div id="letter-unlocked" class="letter-unlocked-wrap" style="display:none;">
+    <div class="letter-open-card">
+      <div class="letter-open-header">
+        <div class="letter-sakura-top">🌸 🌸 🌸</div>
+        <div class="letter-open-title">💌 Your Letter is Here, Angela 💌</div>
+        <div class="letter-open-sub">March 22, 2026 — A special day 🌸</div>
+      </div>
+      <div class="letter-paper">
+        <div class="letter-paper-content" id="letter-content">
+          Loading your letter... 💙
+        </div>
+        <div class="letter-signature">
+          <div class="letter-sig-line"></div>
+          <div class="letter-sig-text">Forever yours, Sohag ❤️💍🏛️✨</div>
+        </div>
+      </div>
+      <div class="letter-bottom-sakura">🌸 🌸 🌸</div>
+    </div>
+  </div>
+
+</div>
 
     <div class="grid4" style="margin-bottom:18px;">
       {% for key, v in vitals_normal.items %}
@@ -840,6 +1137,144 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <script>
 const CSRF = "{{ csrf_token }}";
+
+// ═══════════════════════════════════════
+// 💌 SECRET LOVE LETTER
+// ═══════════════════════════════════════
+
+// Sakura petals for letter
+function startSakura(){
+  const canvas = $('sakura-canvas');
+  if(!canvas) return;
+  canvas.classList.add('active');
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+  addEventListener('resize',()=>{
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
+  });
+  const petals = Array.from({length:60},()=>({
+    x: Math.random()*innerWidth,
+    y: Math.random()*innerHeight - innerHeight,
+    size: 8+Math.random()*12,
+    speedY: 1+Math.random()*2,
+    speedX: (Math.random()-.5)*1.5,
+    rotation: Math.random()*360,
+    rotSpeed: (Math.random()-.5)*3,
+    opacity: .4+Math.random()*.6,
+    color: Math.random()>.33?'#f4a7c0':Math.random()>.5?'#fce4ed':'#ffb7c5'
+  }));
+  function drawPetal(ctx,x,y,size,rotation,color,opacity){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rotation*Math.PI/180);
+    ctx.globalAlpha=opacity;
+    ctx.beginPath();
+if(Math.random()>.5){
+  // Sakura petal 🌸
+  ctx.moveTo(0,-size/2);
+  ctx.bezierCurveTo(size/2,-size/2,size/2,size/2,0,size/2);
+  ctx.bezierCurveTo(-size/2,size/2,-size/2,-size/2,0,-size/2);
+} else {
+  // Lily petal 🌺
+  ctx.ellipse(0,0,size/3,size/1.5,0,0,Math.PI*2);
+}
+ctx.fillStyle=color;
+ctx.fill();
+ctx.restore();
+  }
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    petals.forEach(p=>{
+      drawPetal(ctx,p.x,p.y,p.size,p.rotation,p.color,p.opacity);
+      p.y+=p.speedY; p.x+=p.speedX; p.rotation+=p.rotSpeed;
+      if(p.y>canvas.height+20){
+        p.y=-20; p.x=Math.random()*canvas.width;
+      }
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+// Letter countdown
+const letterUnlock = new Date('2026-03-22T00:00:00');
+function updateLetterCD(){
+  const now = new Date();
+  const diff = letterUnlock - now;
+  if(diff <= 0){
+    openLetter();
+    return;
+  }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  const ld = document.getElementById('lcd-d');
+  const lh = document.getElementById('lcd-h');
+  const lm = document.getElementById('lcd-m');
+  const ls = document.getElementById('lcd-s');
+  if(ld) ld.textContent = d;
+  if(lh) lh.textContent = pad(h);
+  if(lm) lm.textContent = pad(m);
+  if(ls) ls.textContent = pad(s);
+}
+updateLetterCD();
+setInterval(updateLetterCD, 1000);
+
+// Open letter with beautiful animation
+function openLetter(){
+  // Start sakura petals! 🌸
+  startSakura();
+
+  // Fetch letter from database
+  fetch('/api/letter/')
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.status === 'unlocked'){
+        // Hide locked, show unlocked
+        const locked = $('letter-locked');
+        const unlocked = $('letter-unlocked');
+
+        // Animate envelope opening first
+        const envelope = $('envelope-wrap');
+        if(envelope){
+          envelope.style.transform='scale(1.2)';
+          setTimeout(()=>{
+            if(locked) locked.style.opacity='0';
+            setTimeout(()=>{
+              if(locked) locked.style.display='none';
+              if(unlocked) unlocked.style.display='flex';
+              // Type the letter slowly 💌
+              const content = $('letter-content');
+              if(content && data.content){
+                content.textContent='';
+                let i=0;
+                const text = data.content;
+                function typeWriter(){
+                  if(i<text.length){
+                    content.textContent+=text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 18);
+                  }
+                }
+                typeWriter();
+              }
+            },500);
+          },800);
+        }
+      }
+    })
+    .catch(err=>console.log('Letter:', err));
+}
+
+// Check if today is March 22 or later
+const today = new Date();
+const unlockDay = new Date('2026-03-22T00:00:00');
+if(today >= unlockDay){
+  openLetter();
+}
 
 // ═══════════════ UTILS ═══════════════
 const $ = id => document.getElementById(id);
