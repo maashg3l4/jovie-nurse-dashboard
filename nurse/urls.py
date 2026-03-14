@@ -32,12 +32,14 @@ urlpatterns = [
     # ═══════════════════════════════
     path('api/selfcare/save/', views.save_selfcare, name='save_selfcare'),
 
-    # ═══════════════════════════════
-    # ROUTINES
-    # ═══════════════════════════════
-    path('api/routine/save/', views.save_routine, name='save_routine'),
-    path('api/routine/get/', views.get_routines, name='get_routines'),
-    path('api/routine/toggle/', views.toggle_routine, name='toggle_routine'),
+    # ═══════════════════════════════════════
+# ROUTINES
+# ═══════════════════════════════════════
+path('api/routine/save/', views.save_routine, name='save_routine'),
+path('api/routine/get/', views.get_routines, name='get_routines'),
+path('api/routine/toggle/', views.toggle_routine, name='toggle_routine'),
+path('api/routine/delete/', views.delete_routine, name='delete_routine'),
+path('api/routine/check/', views.update_routine_check, name='update_routine_check'),
 
     # ═══════════════════════════════════════
 # GOALS 🌟

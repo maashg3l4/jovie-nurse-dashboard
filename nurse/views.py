@@ -221,7 +221,9 @@ def save_routine(request):
         return JsonResponse({
             'status': 'ok',
             'message': 'Routine saved! 💙',
-            'id': routine.id
+            'id': routine.id,
+            'task': routine.task_name,
+            'type': routine.routine_type,
         })
     except Exception as e:
         return JsonResponse({
@@ -229,13 +231,37 @@ def save_routine(request):
             'message': str(e)
         }, status=400)
 
+@csrf_exempt
+@require_POST
+def delete_routine(request):
+    try:
+        data = json.loads(request.body)
+        DailyRoutine.objects.filter(id=data.get('id')).delete()
+        return JsonResponse({'status': 'ok'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
+@csrf_exempt
+@require_POST
+def update_routine_check(request):
+    try:
+        data = json.loads(request.body)
+        routine = DailyRoutine.objects.get(id=data.get('id'))
+        routine.is_completed = data.get('completed', False)
+        routine.save()
+        return JsonResponse({'status': 'ok'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
 # ═══════════════════════════════════════
 # GET ROUTINES
 # ═══════════════════════════════════════
 def get_routines(request):
-    routines = DailyRoutine.objects.filter(
-        date=timezone.now().date()
-    )
+    routine_type = request.GET.get('type', None)
+    if routine_type:
+        routines = DailyRoutine.objects.filter(routine_type=routine_type)
+    else:
+        routines = DailyRoutine.objects.all()
     data = []
     for r in routines:
         data.append({

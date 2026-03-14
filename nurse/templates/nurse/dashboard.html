@@ -2431,9 +2431,19 @@ function deleteRoutineTask(event, btn){
   event.stopPropagation();
   const task = btn.closest('.routine-task');
   if(!task) return;
-  // Find which type
   const container = task.closest('.routine-tasks');
   const type = container ? container.id.replace('-tasks','') : 'morning';
+  const taskId = task.dataset.id;
+
+  // Delete from database if has ID
+  if(taskId){
+    fetch('/api/routine/delete/', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+      body: JSON.stringify({id: taskId})
+    });
+  }
+
   // Animate removal
   task.style.opacity='0';
   task.style.transform='translateX(20px)';
@@ -2449,24 +2459,10 @@ function addRoutineTask(type){
   const txt = inp ? inp.value.trim() : '';
   if(!txt){ toast('Please type a task first! 💙'); return; }
 
-  const taskDiv = document.createElement('div');
-  taskDiv.className = 'routine-task';
-  taskDiv.onclick = function(){ toggleRoutineTask(this, type); };
-  taskDiv.innerHTML = `
-    <div class="routine-check"></div>
-    <span class="routine-task-icon">✨</span>
-    <span class="routine-task-text">${txt}</span>
-    <button class="routine-delete-btn" onclick="deleteRoutineTask(this)" title="Delete task">🗑️</button>
-  `;
-
   const tasksContainer = document.getElementById(type+'-tasks');
-  if(tasksContainer) tasksContainer.appendChild(taskDiv);
+  const order = tasksContainer ? tasksContainer.children.length : 0;
 
-  inp.value = '';
-  updateRoutineProgress(type);
-  toast('✨ Task added! 💙');
-
-  // Save to database
+  // Save to database FIRST
   fetch('/api/routine/save/', {
     method:'POST',
     headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
@@ -2474,8 +2470,28 @@ function addRoutineTask(type){
       type: type,
       task: txt,
       completed: false,
-      order: tasksContainer ? tasksContainer.children.length : 0
+      order: order
     })
+  }).then(r=>r.json()).then(data=>{
+    if(data.status === 'ok'){
+      // Add to UI with database ID
+      const taskDiv = document.createElement('div');
+      taskDiv.className = 'routine-task';
+      taskDiv.dataset.id = data.id;
+      taskDiv.onclick = function(){ toggleRoutineTask(this, type); };
+      taskDiv.innerHTML = `
+        <div class="routine-check"></div>
+        <span class="routine-task-icon">✨</span>
+        <span class="routine-task-text">${txt}</span>
+        <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
+      `;
+      if(tasksContainer) tasksContainer.appendChild(taskDiv);
+      if(inp) inp.value = '';
+      updateRoutineProgress(type);
+      toast('✨ Task saved forever! 💙');
+    }
+  }).catch(err=>{
+    toast('Error saving task 😢');
   });
 }
 
@@ -2518,26 +2534,35 @@ function saveRoutineProgress(type){
 }
 
 function loadRoutineHistory(){
-  fetch('/api/journal/get/')
-    .then(r=>r.json())
-    .then(data=>{
-      // Show routine history
-      const el = document.getElementById('routine-history');
-      if(!el) return;
-      if(data.entries && data.entries.length > 0){
-        el.innerHTML = data.entries.slice(0,5).map(e=>`
-          <div style="padding:11px 13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:7px;">
-            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-              <strong style="font-size:13px;">📋 ${e.date}</strong>
-              <span style="font-size:11px;color:var(--muted);">${e.energy}</span>
-            </div>
-            <div style="font-size:12px;color:var(--text2);">
-              😴 ${e.sleep_hours}h sleep • 💧 ${e.water_glasses} glasses
-            </div>
-          </div>
-        `).join('');
-      }
-    });
+  // Load saved custom tasks from database
+  ['morning','study','night'].forEach(type=>{
+    fetch('/api/routine/get/?type='+type)
+      .then(r=>r.json())
+      .then(data=>{
+        if(data.routines && data.routines.length > 0){
+          const container = document.getElementById(type+'-tasks');
+          if(!container) return;
+          data.routines.forEach(r=>{
+            // Check if task already exists
+            const exists = container.querySelector('[data-id="'+r.id+'"]');
+            if(!exists){
+              const taskDiv = document.createElement('div');
+              taskDiv.className = 'routine-task' + (r.completed ? ' done' : '');
+              taskDiv.dataset.id = r.id;
+              taskDiv.onclick = function(){ toggleRoutineTask(this, type); };
+              taskDiv.innerHTML = `
+                <div class="routine-check">${r.completed ? '✓' : ''}</div>
+                <span class="routine-task-icon">✨</span>
+                <span class="routine-task-text">${r.task}</span>
+                <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
+              `;
+              container.appendChild(taskDiv);
+            }
+          });
+          updateRoutineProgress(type);
+        }
+      });
+  });
 }
 
 // Load routine history on start
