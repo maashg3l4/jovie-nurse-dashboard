@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from .data import NURSING_TIPS, NURSE_QUOTES, SELF_CARE_ITEMS, MEDICAL_ABBREVIATIONS, VITAL_SIGNS_NORMAL
-from .models import VitalSign, JournalEntry, StressLog, SelfCareLog, DailyRoutine, LoveLetter
+from .models import VitalSign, JournalEntry, StressLog, SelfCareLog, DailyRoutine, LoveLetter, Goal, WellnessSummary
 
 # ═══════════════════════════════════════
 # DASHBOARD
@@ -33,6 +33,13 @@ def dashboard(request):
         'routines_morning': all_routines_morning,
         'routines_study': all_routines_study,
         'routines_night': all_routines_night,
+        # Goals
+        'goals_nursing': Goal.objects.filter(category='nursing').order_by('target_date'),
+        'goals_personal': Goal.objects.filter(category='personal').order_by('target_date'),
+        'goals_relationship': Goal.objects.filter(category='relationship').order_by('target_date'),
+        'goals_todo': Goal.objects.filter(status='todo').order_by('target_date'),
+        'goals_inprogress': Goal.objects.filter(status='inprogress').order_by('target_date'),
+        'goals_done': Goal.objects.filter(status='done').order_by('target_date'),
     }
     return render(request, 'nurse/dashboard.html', context)
 
@@ -288,3 +295,118 @@ def get_love_letter(request):
             'days_remaining': days_remaining,
             'message': f'Your letter opens in {days_remaining} days 💙'
         })
+        
+        # ═══════════════════════════════════════
+# GOALS API
+# ═══════════════════════════════════════
+@csrf_exempt
+@require_POST
+def save_goal(request):
+    try:
+        data = json.loads(request.body)
+        goal = Goal.objects.create(
+            title=data.get('title', ''),
+            category=data.get('category', 'personal'),
+            status=data.get('status', 'todo'),
+            target_date=data.get('target_date', None),
+            total_steps=int(data.get('total_steps', 5)),
+            completed_steps=int(data.get('completed_steps', 0)),
+            notes=data.get('notes', ''),
+        )
+        return JsonResponse({
+            'status': 'ok',
+            'message': 'Goal saved forever! 💙',
+            'id': goal.id
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=400)
+
+@csrf_exempt
+@require_POST
+def update_goal(request):
+    try:
+        data = json.loads(request.body)
+        goal = Goal.objects.get(id=data.get('id'))
+        if 'status' in data:
+            goal.status = data['status']
+        if 'completed_steps' in data:
+            goal.completed_steps = int(data['completed_steps'])
+        if 'notes' in data:
+            goal.notes = data['notes']
+        goal.save()
+        return JsonResponse({
+            'status': 'ok',
+            'message': 'Goal updated! 💙',
+            'progress': goal.progress_percentage()
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=400)
+
+def get_goals(request):
+    goals = Goal.objects.all()
+    data = []
+    for g in goals:
+        data.append({
+            'id': g.id,
+            'title': g.title,
+            'category': g.category,
+            'status': g.status,
+            'target_date': g.target_date.strftime('%Y-%m-%d') if g.target_date else '',
+            'total_steps': g.total_steps,
+            'completed_steps': g.completed_steps,
+            'progress': g.progress_percentage(),
+            'notes': g.notes,
+        })
+    return JsonResponse({'status': 'ok', 'goals': data})
+
+# ═══════════════════════════════════════
+# WELLNESS SUMMARY
+# ═══════════════════════════════════════
+def get_wellness_summary(request):
+    from django.utils import timezone
+    from django.db.models import Avg, Count, Sum
+    import datetime
+
+    # Get period from request
+    period = request.GET.get('period', 'month')
+    now = timezone.now()
+
+    if period == 'month':
+        start_date = now.replace(day=1).date()
+    elif period == 'week':
+        start_date = (now - datetime.timedelta(days=7)).date()
+    else:
+        start_date = (now - datetime.timedelta(days=30)).date()
+
+    # Calculate stats
+    journals = JournalEntry.objects.filter(date__gte=start_date)
+    vitals = VitalSign.objects.filter(date_time__date__gte=start_date)
+    stress_logs = StressLog.objects.filter(date__gte=start_date)
+    selfcare_logs = SelfCareLog.objects.filter(date__gte=start_date)
+
+    avg_sleep = journals.aggregate(Avg('sleep_hours'))['sleep_hours__avg'] or 0
+    total_water = journals.aggregate(Sum('water_glasses'))['water_glasses__sum'] or 0
+    avg_stress = stress_logs.aggregate(Avg('overall_level'))['overall_level__avg'] or 0
+    vitals_count = vitals.count()
+    journal_count = journals.count()
+    selfcare_count = selfcare_logs.count()
+
+    return JsonResponse({
+        'status': 'ok',
+        'period': period,
+        'start_date': str(start_date),
+        'stats': {
+            'avg_sleep': round(avg_sleep, 1),
+            'total_water': total_water,
+            'avg_stress': round(avg_stress, 1),
+            'vitals_count': vitals_count,
+            'journal_count': journal_count,
+            'selfcare_count': selfcare_count,
+        }
+    })

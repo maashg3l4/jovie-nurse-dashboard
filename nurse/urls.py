@@ -39,8 +39,15 @@ urlpatterns = [
     path('api/routine/get/', views.get_routines, name='get_routines'),
     path('api/routine/toggle/', views.toggle_routine, name='toggle_routine'),
 
-    # ═══════════════════════════════
-    # LOVE LETTER 💌
-    # ═══════════════════════════════
-    path('api/letter/', views.get_love_letter, name='get_love_letter'),
+    # ═══════════════════════════════════════
+# GOALS 🌟
+# ═══════════════════════════════════════
+path('api/goals/save/', views.save_goal, name='save_goal'),
+path('api/goals/update/', views.update_goal, name='update_goal'),
+path('api/goals/get/', views.get_goals, name='get_goals'),
+
+# ═══════════════════════════════════════
+# WELLNESS SUMMARY 📊
+# ═══════════════════════════════════════
+path('api/wellness/', views.get_wellness_summary, name='get_wellness_summary'),
 ]

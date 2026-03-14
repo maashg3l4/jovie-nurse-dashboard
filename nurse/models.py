@@ -106,3 +106,58 @@ class LoveLetter(models.Model):
 
     def __str__(self):
         return f"Love Letter - unlocks {self.unlock_date}"
+    
+    # ═══════════════════════════════════════
+# GOALS & ACHIEVEMENTS
+# ═══════════════════════════════════════
+class Goal(models.Model):
+    CATEGORY_CHOICES = [
+        ('nursing', '🩺 Nursing'),
+        ('personal', '🌸 Personal'),
+        ('relationship', '💕 Relationship'),
+    ]
+    STATUS_CHOICES = [
+        ('todo', 'To Do'),
+        ('inprogress', 'In Progress'),
+        ('done', 'Done'),
+    ]
+    title = models.CharField(max_length=200)
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
+    target_date = models.DateField(null=True, blank=True)
+    total_steps = models.IntegerField(default=5)
+    completed_steps = models.IntegerField(default=0)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['target_date', 'created_at']
+
+    def __str__(self):
+        return f"{self.category} - {self.title}"
+
+    def progress_percentage(self):
+        if self.total_steps == 0:
+            return 0
+        return int((self.completed_steps / self.total_steps) * 100)
+
+# ═══════════════════════════════════════
+# MONTHLY WELLNESS SUMMARY
+# ═══════════════════════════════════════
+class WellnessSummary(models.Model):
+    month = models.IntegerField()
+    year = models.IntegerField()
+    avg_sleep = models.FloatField(default=0)
+    total_water = models.IntegerField(default=0)
+    avg_stress = models.FloatField(default=0)
+    selfcare_rate = models.FloatField(default=0)
+    vitals_count = models.IntegerField(default=0)
+    journal_count = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-year', '-month']
+
+    def __str__(self):
+        return f"Wellness {self.month}/{self.year}"

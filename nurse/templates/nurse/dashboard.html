@@ -857,6 +857,203 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   animation:fadeIn .35s ease;
 }
 
+/* ═══════════════════════════════════════
+   🌟 KANBAN GOALS BOARD
+═══════════════════════════════════════ */
+.kanban-wrap{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:18px;
+}
+.kanban-col{
+  background:var(--surface);
+  border-radius:var(--r);
+  border:1px solid var(--border);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.kanban-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  font-weight:700;
+  font-size:13px;
+}
+.todo-header{
+  background:linear-gradient(135deg,rgba(91,155,213,.15),rgba(91,155,213,.05));
+  border-bottom:2px solid rgba(91,155,213,.3);
+  color:var(--blue-deep);
+}
+[data-theme="dark"] .todo-header{color:var(--blue-light);}
+.progress-header{
+  background:linear-gradient(135deg,rgba(247,201,72,.15),rgba(247,201,72,.05));
+  border-bottom:2px solid rgba(247,201,72,.4);
+  color:#b8860b;
+}
+[data-theme="dark"] .progress-header{color:#f7c948;}
+.done-header{
+  background:linear-gradient(135deg,rgba(46,207,168,.15),rgba(46,207,168,.05));
+  border-bottom:2px solid rgba(46,207,168,.3);
+  color:#1a9e7a;
+}
+[data-theme="dark"] .done-header{color:#2ecfa8;}
+.kanban-count{
+  width:22px;height:22px;
+  border-radius:50%;
+  background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;
+  font-weight:700;
+}
+.kanban-cards{
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:150px;
+  max-height:500px;
+  overflow-y:auto;
+  scrollbar-width:thin;
+}
+.kanban-empty{
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+  padding:20px;
+  font-style:italic;
+}
+
+/* GOAL CARDS */
+.goal-card{
+  background:var(--surface2);
+  border-radius:var(--rs);
+  padding:13px;
+  border:1px solid var(--border);
+  transition:all .25s;
+  animation:fadeIn .3s ease;
+}
+.goal-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+  border-color:var(--blue-light);
+}
+.done-card{
+  opacity:.7;
+  background:rgba(46,207,168,.05);
+  border-color:rgba(46,207,168,.2);
+}
+.goal-card-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+  flex-wrap:wrap;
+  gap:5px;
+}
+.goal-category-badge{
+  font-size:10px;
+  font-weight:700;
+  padding:3px 9px;
+  border-radius:100px;
+  letter-spacing:.3px;
+}
+.nursing-badge{
+  background:rgba(91,155,213,.15);
+  color:var(--blue-deep);
+}
+[data-theme="dark"] .nursing-badge{color:var(--blue-light);}
+.personal-badge{
+  background:rgba(244,167,192,.2);
+  color:#c06080;
+}
+[data-theme="dark"] .personal-badge{color:var(--pink);}
+.relationship-badge{
+  background:rgba(155,127,212,.2);
+  color:#7b5ea7;
+}
+[data-theme="dark"] .relationship-badge{color:#c4a8ff;}
+.goal-date{
+  font-size:10px;
+  color:var(--muted);
+}
+.goal-card-title{
+  font-size:13px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:7px;
+  line-height:1.4;
+}
+.goal-steps{
+  font-size:11px;
+  color:var(--text2);
+  margin-bottom:6px;
+}
+.goal-progress-bar{
+  background:var(--border);
+  border-radius:100px;
+  height:6px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+.goal-progress-fill{
+  height:100%;
+  border-radius:100px;
+  background:linear-gradient(90deg,var(--blue),var(--blue-deep));
+  transition:width .4s ease;
+}
+.progress-fill{
+  background:linear-gradient(90deg,#f7c948,#f4a76c);
+}
+.done-fill{
+  background:linear-gradient(90deg,#2ecfa8,#1a9e7a);
+}
+.goal-card-actions{
+  display:flex;
+  gap:7px;
+}
+.goal-btn{
+  padding:5px 12px;
+  border-radius:100px;
+  border:1.5px solid var(--border);
+  background:transparent;
+  color:var(--text2);
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'DM Sans',sans-serif;
+}
+.goal-btn:hover{
+  background:var(--blue);
+  border-color:var(--blue);
+  color:white;
+}
+.goal-btn-done{
+  border-color:rgba(46,207,168,.4);
+  color:#1a9e7a;
+}
+.goal-btn-done:hover{
+  background:#2ecfa8;
+  border-color:#2ecfa8;
+  color:white;
+}
+.goal-btn-step{
+  border-color:rgba(247,201,72,.4);
+  color:#b8860b;
+}
+.goal-btn-step:hover{
+  background:#f7c948;
+  border-color:#f7c948;
+  color:white;
+}
+
+/* FILTER BUTTONS */
+@media(max-width:900px){
+  .kanban-wrap{grid-template-columns:1fr;}
+}
+
 /* scrollbar */
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
@@ -1691,31 +1888,150 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   </div>
 
   <!-- ══ GOALS ══ -->
-  <div id="section-goals" class="section">
-    <div class="grid2">
-      <div class="card">
-        <div class="card-title">🌟 My Goals</div>
-        <div id="goals-list">
-          <div class="goal-item"><div class="goal-num">1</div><div style="flex:1;"><div class="goal-title">Pass all nursing subjects this semester 📚</div><div class="goal-sub">Academic — Spring 2026</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
-          <div class="goal-item"><div class="goal-num">2</div><div style="flex:1;"><div class="goal-title">Master vital signs monitoring tools 🩺</div><div class="goal-sub">Clinical — Stethoscope, Sphygmomanometer, Pulse Oximeter, Glucometer</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
-          <div class="goal-item"><div class="goal-num">3</div><div style="flex:1;"><div class="goal-title">Practice self-care every single day 🌸</div><div class="goal-sub">Personal wellness</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
-          <div class="goal-item"><div class="goal-num">4</div><div style="flex:1;"><div class="goal-title">Stay calm with difficult people 💙</div><div class="goal-sub">Resilience — Your kindness is your superpower</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
-          <div class="goal-item"><div class="goal-num">5</div><div style="flex:1;"><div class="goal-title">Memorize 50 medical abbreviations 📋</div><div class="goal-sub">Knowledge</div></div><span style="font-size:20px;cursor:pointer;" onclick="toggleGoal(this)">⭕</span></div>
-        </div>
-        <div style="display:flex;gap:9px;margin-top:14px;">
-          <input type="text" class="form-input" placeholder="Add a new goal..." id="new-goal">
-          <button class="btn btn-primary btn-sm" onclick="addGoal()">+ Add</button>
-        </div>
+<div id="section-goals" class="section">
+
+  <!-- HEADER -->
+  <div class="card" style="margin-bottom:18px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="card-title">🌟 Goals & Achievements</div>
+        <p style="font-size:13px;color:var(--text2);font-style:italic;">"Every goal you achieve makes me so proud of you my love 💙 — Sohag"</p>
       </div>
-      <div class="card">
-        <div class="card-title">🏆 Achievements</div>
-        <div class="tip-card"><div class="tip-icon">🎓</div><div class="tip-text"><strong>Enrolled Nurse</strong> — Started nursing school. The hardest step is always the first. 💙</div></div>
-        <div class="tip-card"><div class="tip-icon">💪</div><div class="tip-text"><strong>Resilient Soul</strong> — Showed up even on the hard days, even with difficult people around.</div></div>
-        <div class="tip-card"><div class="tip-icon">🩺</div><div class="tip-text"><strong>Tool Master (In Training)</strong> — Learning stethoscope, sphygmomanometer, pulse oximeter & glucometer.</div></div>
-        <div class="tip-card"><div class="tip-icon">💙</div><div class="tip-text"><strong>Long Distance Champion</strong> — Staying strong and loving across the miles. That takes real heart.</div></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;">
+        <button class="btn btn-outline btn-sm" onclick="filterGoals('all')" id="gf-all" style="border-color:var(--blue);color:var(--blue);">All</button>
+        <button class="btn btn-outline btn-sm" onclick="filterGoals('nursing')" id="gf-nursing">🩺 Nursing</button>
+        <button class="btn btn-outline btn-sm" onclick="filterGoals('personal')" id="gf-personal">🌸 Personal</button>
+        <button class="btn btn-outline btn-sm" onclick="filterGoals('relationship')" id="gf-relationship">💕 Relationship</button>
       </div>
     </div>
   </div>
+
+  <!-- KANBAN BOARD -->
+  <div class="kanban-wrap">
+
+    <!-- TO DO -->
+    <div class="kanban-col">
+      <div class="kanban-header todo-header">
+        <span>📋 To Do</span>
+        <span class="kanban-count" id="todo-count">0</span>
+      </div>
+      <div class="kanban-cards" id="kanban-todo">
+        {% for goal in goals_todo %}
+        <div class="goal-card" data-id="{{ goal.id }}" data-category="{{ goal.category }}" data-status="todo">
+          <div class="goal-card-top">
+            <span class="goal-category-badge {{ goal.category }}-badge">
+              {% if goal.category == 'nursing' %}🩺{% elif goal.category == 'personal' %}🌸{% else %}💕{% endif %}
+              {{ goal.category|title }}
+            </span>
+            <span class="goal-date">📅 {{ goal.target_date|date:"M d, Y" }}</span>
+          </div>
+          <div class="goal-card-title">{{ goal.title }}</div>
+          <div class="goal-steps">{{ goal.completed_steps }} of {{ goal.total_steps }} steps done</div>
+          <div class="goal-progress-bar">
+            <div class="goal-progress-fill" style="width:{{ goal.progress_percentage }}%"></div>
+          </div>
+          <div class="goal-card-actions">
+            <button class="goal-btn" onclick="moveGoal({{ goal.id }},'inprogress')">▶ Start</button>
+            <button class="goal-btn goal-btn-step" onclick="addStep({{ goal.id }},{{ goal.completed_steps }},{{ goal.total_steps }})">+1 Step</button>
+          </div>
+        </div>
+        {% empty %}
+        <div class="kanban-empty">No goals here yet 💙</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- IN PROGRESS -->
+    <div class="kanban-col">
+      <div class="kanban-header progress-header">
+        <span>⚡ In Progress</span>
+        <span class="kanban-count" id="progress-count">0</span>
+      </div>
+      <div class="kanban-cards" id="kanban-inprogress">
+        {% for goal in goals_inprogress %}
+        <div class="goal-card" data-id="{{ goal.id }}" data-category="{{ goal.category }}" data-status="inprogress">
+          <div class="goal-card-top">
+            <span class="goal-category-badge {{ goal.category }}-badge">
+              {% if goal.category == 'nursing' %}🩺{% elif goal.category == 'personal' %}🌸{% else %}💕{% endif %}
+              {{ goal.category|title }}
+            </span>
+            <span class="goal-date">📅 {{ goal.target_date|date:"M d, Y" }}</span>
+          </div>
+          <div class="goal-card-title">{{ goal.title }}</div>
+          <div class="goal-steps">{{ goal.completed_steps }} of {{ goal.total_steps }} steps done</div>
+          <div class="goal-progress-bar">
+            <div class="goal-progress-fill progress-fill" style="width:{{ goal.progress_percentage }}%"></div>
+          </div>
+          <div class="goal-card-actions">
+            <button class="goal-btn goal-btn-done" onclick="moveGoal({{ goal.id }},'done')">✅ Complete</button>
+            <button class="goal-btn goal-btn-step" onclick="addStep({{ goal.id }},{{ goal.completed_steps }},{{ goal.total_steps }})">+1 Step</button>
+          </div>
+        </div>
+        {% empty %}
+        <div class="kanban-empty">No goals in progress 💙</div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="kanban-col">
+      <div class="kanban-header done-header">
+        <span>🏆 Done</span>
+        <span class="kanban-count" id="done-count">0</span>
+      </div>
+      <div class="kanban-cards" id="kanban-done">
+        {% for goal in goals_done %}
+        <div class="goal-card done-card" data-id="{{ goal.id }}" data-category="{{ goal.category }}" data-status="done">
+          <div class="goal-card-top">
+            <span class="goal-category-badge {{ goal.category }}-badge">
+              {% if goal.category == 'nursing' %}🩺{% elif goal.category == 'personal' %}🌸{% else %}💕{% endif %}
+              {{ goal.category|title }}
+            </span>
+            <span style="font-size:11px;color:#2ecfa8;font-weight:600;">✅ Completed!</span>
+          </div>
+          <div class="goal-card-title" style="text-decoration:line-through;opacity:.6;">{{ goal.title }}</div>
+          <div class="goal-steps" style="color:#2ecfa8;">All steps completed! 🎉</div>
+          <div class="goal-progress-bar">
+            <div class="goal-progress-fill done-fill" style="width:100%"></div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="kanban-empty">Complete goals to see them here! 🏆</div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ADD NEW GOAL -->
+  <div class="card" style="margin-top:18px;">
+    <div class="card-title">➕ Add New Goal</div>
+    <div class="grid2">
+      <div class="form-group">
+        <label class="form-label">Goal Title</label>
+        <input type="text" class="form-input" placeholder="What do you want to achieve?" id="new-goal-title">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="new-goal-category">
+          <option value="nursing">🩺 Nursing</option>
+          <option value="personal">🌸 Personal</option>
+          <option value="relationship">💕 Relationship</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Date</label>
+        <input type="date" class="form-input" id="new-goal-date">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Total Steps</label>
+        <input type="number" class="form-input" value="5" min="1" max="20" id="new-goal-steps">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="addNewGoal()">🌟 Add Goal</button>
+  </div>
+
+</div>
 
   <!-- ══ ABBREVIATIONS ══ -->
   <div id="section-abbr" class="section">
@@ -1909,6 +2225,116 @@ if(today >= unlockDay){
 const $ = id => document.getElementById(id);
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
 function pad(n){ return String(n).padStart(2,'0'); }
+
+// ═══════════════════════════════════════
+// 🌟 GOALS KANBAN
+// ═══════════════════════════════════════
+function updateKanbanCounts(){
+  const todo = document.querySelectorAll('#kanban-todo .goal-card').length;
+  const progress = document.querySelectorAll('#kanban-inprogress .goal-card').length;
+  const done = document.querySelectorAll('#kanban-done .goal-card').length;
+  const tc = document.getElementById('todo-count');
+  const pc = document.getElementById('progress-count');
+  const dc = document.getElementById('done-count');
+  if(tc) tc.textContent = todo;
+  if(pc) pc.textContent = progress;
+  if(dc) dc.textContent = done;
+}
+updateKanbanCounts();
+
+function moveGoal(id, newStatus){
+  fetch('/api/goals/update/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify({id: id, status: newStatus})
+  }).then(r=>r.json()).then(data=>{
+    if(data.status === 'ok'){
+      if(newStatus === 'done'){
+        // Celebrate! 🎉🌸
+        launchConfetti();
+        startSakura();
+        toast('🎉 "I am so proud of you my love! 💙" — Sohag');
+      } else {
+        toast('💙 Goal updated!');
+      }
+      // Reload page to show updated kanban
+      setTimeout(()=>location.reload(), 1500);
+    }
+  });
+}
+
+function addStep(id, current, total){
+  if(current >= total){
+    toast('All steps done! Click Complete! 🎉');
+    return;
+  }
+  const newSteps = current + 1;
+  fetch('/api/goals/update/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify({id: id, completed_steps: newSteps})
+  }).then(r=>r.json()).then(data=>{
+    if(data.status === 'ok'){
+      toast('💙 Step completed! '+newSteps+'/'+total);
+      setTimeout(()=>location.reload(), 1000);
+    }
+  });
+}
+
+function addNewGoal(){
+  const title = document.getElementById('new-goal-title');
+  const category = document.getElementById('new-goal-category');
+  const date = document.getElementById('new-goal-date');
+  const steps = document.getElementById('new-goal-steps');
+
+  if(!title || !title.value.trim()){
+    toast('Please enter a goal title! 💙');
+    return;
+  }
+
+  fetch('/api/goals/save/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify({
+      title: title.value.trim(),
+      category: category ? category.value : 'personal',
+      target_date: date ? date.value : '',
+      total_steps: steps ? parseInt(steps.value) : 5,
+      completed_steps: 0,
+      status: 'todo'
+    })
+  }).then(r=>r.json()).then(data=>{
+    if(data.status === 'ok'){
+      toast('🌟 New goal added forever! 💙');
+      setTimeout(()=>location.reload(), 1000);
+    }
+  });
+}
+
+function filterGoals(category){
+  // Update filter buttons
+  document.querySelectorAll('[id^="gf-"]').forEach(btn=>{
+    btn.style.background='transparent';
+    btn.style.color='var(--text2)';
+    btn.style.borderColor='var(--border)';
+  });
+  const activeBtn = document.getElementById('gf-'+category);
+  if(activeBtn){
+    activeBtn.style.background='var(--blue)';
+    activeBtn.style.color='white';
+    activeBtn.style.borderColor='var(--blue)';
+  }
+
+  // Filter cards
+  document.querySelectorAll('.goal-card').forEach(card=>{
+    if(category === 'all'){
+      card.style.display='block';
+    } else {
+      card.style.display = card.dataset.category === category ? 'block' : 'none';
+    }
+  });
+  updateKanbanCounts();
+}
 
 // ═══════════════════════════════════════
 // 📋 DAILY ROUTINES
