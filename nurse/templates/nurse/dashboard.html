@@ -852,6 +852,27 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
+/* DELETE BUTTON */
+.routine-delete-btn{
+  margin-left:auto;
+  background:transparent;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+  opacity:0;
+  transition:all .2s;
+  padding:4px 6px;
+  border-radius:6px;
+  flex-shrink:0;
+}
+.routine-task:hover .routine-delete-btn{
+  opacity:1;
+}
+.routine-delete-btn:hover{
+  background:rgba(224,85,85,.15);
+  transform:scale(1.1);
+}
+
 /* ROUTINE PANEL */
 .routine-panel{
   animation:fadeIn .35s ease;
@@ -1690,31 +1711,37 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <div class="routine-check"></div>
           <span class="routine-task-icon">☀️</span>
           <span class="routine-task-text">Wake up & stretch</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">💧</span>
           <span class="routine-task-text">Drink water</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🌸</span>
           <span class="routine-task-text">Skincare routine</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🍳</span>
           <span class="routine-task-text">Eat breakfast</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">📋</span>
           <span class="routine-task-text">Review today's shift</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'morning')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🧘</span>
           <span class="routine-task-text">5 min meditation</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
       </div>
       <div class="routine-add-wrap">
@@ -1744,36 +1771,43 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <div class="routine-check"></div>
           <span class="routine-task-icon">🍅</span>
           <span class="routine-task-text">Set Pomodoro timer</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">📖</span>
           <span class="routine-task-text">Review nursing notes</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🩺</span>
           <span class="routine-task-text">Practice vital signs</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">📋</span>
           <span class="routine-task-text">Medical abbreviations</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🍵</span>
           <span class="routine-task-text">Take matcha break</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">💧</span>
           <span class="routine-task-text">Drink water</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'study')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">📝</span>
           <span class="routine-task-text">Write summary notes</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
       </div>
       <div class="routine-add-wrap">
@@ -1803,46 +1837,55 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
           <div class="routine-check"></div>
           <span class="routine-task-icon">📓</span>
           <span class="routine-task-text">Write journal entry</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🌸</span>
           <span class="routine-task-text">Self-care checklist</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">😤</span>
           <span class="routine-task-text">Log stress level</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">⏰</span>
           <span class="routine-task-text">Set tomorrow's alarm</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🙏</span>
           <span class="routine-task-text">Gratitude note</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">💧</span>
           <span class="routine-task-text">Drink water</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🛌</span>
           <span class="routine-task-text">Skincare night routine</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🌙</span>
           <span class="routine-task-text">No phone 30 mins before bed</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
         <div class="routine-task" onclick="toggleRoutineTask(this,'night')">
           <div class="routine-check"></div>
           <span class="routine-task-icon">🤲</span>
           <span class="routine-task-text">Pray time — a little to God 🙏</span>
+          <button class="routine-delete-btn" onclick="deleteRoutineTask(event,this)" title="Delete">🗑️</button>
         </div>
       </div>
       <div class="routine-add-wrap">
@@ -2383,6 +2426,24 @@ function updateRoutineProgress(type){
   }
 }
 
+// DELETE ROUTINE TASK
+function deleteRoutineTask(event, btn){
+  event.stopPropagation();
+  const task = btn.closest('.routine-task');
+  if(!task) return;
+  // Find which type
+  const container = task.closest('.routine-tasks');
+  const type = container ? container.id.replace('-tasks','') : 'morning';
+  // Animate removal
+  task.style.opacity='0';
+  task.style.transform='translateX(20px)';
+  setTimeout(()=>{
+    task.remove();
+    updateRoutineProgress(type);
+    toast('🗑️ Task deleted! 💙');
+  },300);
+}
+
 function addRoutineTask(type){
   const inp = document.getElementById(type+'-add-input');
   const txt = inp ? inp.value.trim() : '';
@@ -2395,6 +2456,7 @@ function addRoutineTask(type){
     <div class="routine-check"></div>
     <span class="routine-task-icon">✨</span>
     <span class="routine-task-text">${txt}</span>
+    <button class="routine-delete-btn" onclick="deleteRoutineTask(this)" title="Delete task">🗑️</button>
   `;
 
   const tasksContainer = document.getElementById(type+'-tasks');
