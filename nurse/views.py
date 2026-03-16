@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from .data import NURSING_TIPS, NURSE_QUOTES, SELF_CARE_ITEMS, MEDICAL_ABBREVIATIONS, VITAL_SIGNS_NORMAL
-from .models import VitalSign, JournalEntry, StressLog, SelfCareLog, DailyRoutine, LoveLetter, Goal, WellnessSummary
+from .models import VitalSign, JournalEntry, StressLog, SelfCareLog, DailyRoutine, LoveLetter, Goal, WellnessSummary, PeriodLog, CycleInfo
 
 # ═══════════════════════════════════════
 # DASHBOARD
@@ -436,3 +436,109 @@ def get_wellness_summary(request):
             'selfcare_count': selfcare_count,
         }
     })
+    # ═══════════════════════════════════════
+# 🌸 PERIOD TRACKER / MONTHLY WELLNESS
+# ═══════════════════════════════════════
+@csrf_exempt
+@require_POST
+def save_period_log(request):
+    try:
+        data = json.loads(request.body)
+        log = PeriodLog.objects.create(
+            date=data.get('date', timezone.now().date()),
+            phase=data.get('phase', 'regular'),
+            flow=data.get('flow', ''),
+            pain_level=int(data.get('pain_level', 0)),
+            mood=data.get('mood', ''),
+            symptoms=json.dumps(data.get('symptoms', [])),
+            notes=data.get('notes', ''),
+            medication_taken=data.get('medication_taken', False),
+            water_reminder=data.get('water_reminder', False),
+        )
+        # Update cycle info
+        if data.get('phase') == 'period':
+            cycle, created = CycleInfo.objects.get_or_create(id=1)
+            if data.get('is_start'):
+                from datetime import date, timedelta
+                start = date.fromisoformat(data.get('date'))
+                cycle.last_period_start = start
+                cycle.next_period_prediction = start + timedelta(days=cycle.cycle_length)
+                cycle.save()
+        return JsonResponse({
+            'status': 'ok',
+            'message': 'Period log saved! 💙',
+            'id': log.id
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=400)
+
+def get_period_logs(request):
+    logs = PeriodLog.objects.all()[:30]
+    data = []
+    for l in logs:
+        data.append({
+            'id': l.id,
+            'date': l.date.strftime('%Y-%m-%d'),
+            'phase': l.phase,
+            'flow': l.flow,
+            'pain_level': l.pain_level,
+            'mood': l.mood,
+            'symptoms': json.loads(l.symptoms) if l.symptoms else [],
+            'notes': l.notes,
+            'medication_taken': l.medication_taken,
+        })
+    return JsonResponse({'status': 'ok', 'logs': data})
+
+@csrf_exempt
+@require_POST
+def save_cycle_info(request):
+    try:
+        data = json.loads(request.body)
+        from datetime import date, timedelta
+        cycle, created = CycleInfo.objects.get_or_create(id=1)
+        if data.get('last_period_start'):
+            cycle.last_period_start = date.fromisoformat(data['last_period_start'])
+        if data.get('last_period_end'):
+            cycle.last_period_end = date.fromisoformat(data['last_period_end'])
+        if data.get('cycle_length'):
+            cycle.cycle_length = int(data['cycle_length'])
+        if data.get('period_length'):
+            cycle.period_length = int(data['period_length'])
+        # Calculate next period
+        if cycle.last_period_start:
+            cycle.next_period_prediction = cycle.last_period_start + timedelta(days=cycle.cycle_length)
+        cycle.save()
+        return JsonResponse({
+            'status': 'ok',
+            'message': 'Cycle info saved! 💙',
+            'next_period': str(cycle.next_period_prediction) if cycle.next_period_prediction else None
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=400)
+
+def get_cycle_info(request):
+    try:
+        cycle = CycleInfo.objects.get(id=1)
+        return JsonResponse({
+            'status': 'ok',
+            'last_period_start': str(cycle.last_period_start) if cycle.last_period_start else None,
+            'last_period_end': str(cycle.last_period_end) if cycle.last_period_end else None,
+            'cycle_length': cycle.cycle_length,
+            'period_length': cycle.period_length,
+            'next_period': str(cycle.next_period_prediction) if cycle.next_period_prediction else None,
+        })
+    except CycleInfo.DoesNotExist:
+        return JsonResponse({
+            'status': 'ok',
+            'last_period_start': None,
+            'last_period_end': None,
+            'cycle_length': 28,
+            'period_length': 5,
+            'next_period': None,
+        })

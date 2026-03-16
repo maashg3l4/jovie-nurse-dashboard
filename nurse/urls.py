@@ -48,8 +48,17 @@ path('api/goals/save/', views.save_goal, name='save_goal'),
 path('api/goals/update/', views.update_goal, name='update_goal'),
 path('api/goals/get/', views.get_goals, name='get_goals'),
 
+
 # ═══════════════════════════════════════
 # WELLNESS SUMMARY 📊
 # ═══════════════════════════════════════
 path('api/wellness/', views.get_wellness_summary, name='get_wellness_summary'),
 ]
+
+# ═══════════════════════════════════════
+# 🌸 PERIOD TRACKER / MONTHLY WELLNESS
+# ═══════════════════════════════════════
+path('api/period/save/', views.save_period_log, name='save_period_log'),
+path('api/period/get/', views.get_period_logs, name='get_period_logs'),
+path('api/cycle/save/', views.save_cycle_info, name='save_cycle_info'),
+path('api/cycle/get/', views.get_cycle_info, name='get_cycle_info'),

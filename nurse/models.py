@@ -161,3 +161,47 @@ class WellnessSummary(models.Model):
 
     def __str__(self):
         return f"Wellness {self.month}/{self.year}"
+    
+# ═══════════════════════════════════════
+# MONTHLY WELLNESS / PERIOD TRACKER 🌸
+# ═══════════════════════════════════════
+class PeriodLog(models.Model):
+    PHASE_CHOICES = [
+        ('period', '🔴 Period'),
+        ('pms', '💜 PMS'),
+        ('ovulation', '💛 Ovulation'),
+        ('regular', '💫 Regular'),
+    ]
+    FLOW_CHOICES = [
+        ('light', 'Light'),
+        ('medium', 'Medium'),
+        ('heavy', 'Heavy'),
+    ]
+    date = models.DateField(default=timezone.now)
+    phase = models.CharField(max_length=20, choices=PHASE_CHOICES, default='regular')
+    flow = models.CharField(max_length=20, choices=FLOW_CHOICES, blank=True)
+    pain_level = models.IntegerField(default=0)
+    mood = models.CharField(max_length=100, blank=True)
+    symptoms = models.TextField(blank=True)
+    notes = models.TextField(blank=True)
+    medication_taken = models.BooleanField(default=False)
+    water_reminder = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"Period Log - {self.date} - {self.phase}"
+
+class CycleInfo(models.Model):
+    last_period_start = models.DateField(null=True, blank=True)
+    last_period_end = models.DateField(null=True, blank=True)
+    cycle_length = models.IntegerField(default=28)
+    period_length = models.IntegerField(default=5)
+    next_period_prediction = models.DateField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cycle Info - Last: {self.last_period_start}"

@@ -1075,6 +1075,172 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   .kanban-wrap{grid-template-columns:1fr;}
 }
 
+/* ═══════════════════════════════════════
+   🌸 PERIOD TRACKER STYLES
+═══════════════════════════════════════ */
+.period-phase-btns{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+.period-phase-btn{
+  padding:8px 14px;
+  border-radius:100px;
+  border:2px solid var(--border);
+  background:transparent;
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+}
+.period-phase-btn.active{
+  transform:scale(1.05);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+.period-phase-msg{
+  background:linear-gradient(135deg,rgba(255,100,100,.08),rgba(244,167,192,.1));
+  border-radius:var(--rs);
+  padding:13px 15px;
+  font-size:13px;
+  color:var(--text);
+  font-style:italic;
+  border-left:4px solid #e05580;
+  margin-bottom:14px;
+  line-height:1.6;
+}
+.period-flow-btn{
+  padding:8px 16px;
+  border-radius:100px;
+  border:2px solid rgba(255,150,150,.3);
+  background:transparent;
+  color:#c0405f;
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .25s;
+}
+.period-flow-btn.active{
+  background:linear-gradient(135deg,#e05580,#c0405f);
+  color:white;
+  border-color:transparent;
+}
+.period-pain-btns{
+  display:flex;
+  gap:8px;
+  margin-top:6px;
+}
+.period-pain-btn{
+  width:38px;height:38px;
+  border-radius:50%;
+  border:2px solid rgba(255,150,150,.3);
+  background:transparent;
+  color:#c0405f;
+  font-family:'Playfair Display',serif;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .25s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.period-pain-btn.active{
+  background:linear-gradient(135deg,#e05580,#c0405f);
+  color:white;
+  border-color:transparent;
+  transform:scale(1.1);
+}
+.period-mood-btns{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:6px;
+}
+.period-mood-btn{
+  width:40px;height:40px;
+  border-radius:50%;
+  border:2px solid var(--border);
+  background:var(--surface2);
+  font-size:20px;
+  cursor:pointer;
+  transition:all .25s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.period-mood-btn.active{
+  border-color:#e05580;
+  transform:scale(1.15);
+  box-shadow:0 4px 12px rgba(224,85,128,.3);
+}
+.period-symptoms{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:8px;
+  margin-top:6px;
+}
+.symptom-check{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:12px;
+  color:var(--text2);
+  cursor:pointer;
+  padding:6px 10px;
+  border-radius:var(--rs);
+  background:var(--surface2);
+  border:1px solid var(--border);
+  transition:all .2s;
+}
+.symptom-check:hover{
+  border-color:rgba(255,150,150,.4);
+  background:rgba(255,100,100,.05);
+}
+.symptom-check input{
+  accent-color:#e05580;
+}
+.period-reminders{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+  gap:8px;
+  margin-top:6px;
+}
+
+/* CYCLE CHART */
+.cycle-chart-wrap{
+  position:relative;
+  width:200px;
+  height:200px;
+}
+.cycle-chart-center{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+}
+.cycle-legend{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.cycle-legend-item{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  font-size:11px;
+  color:var(--text2);
+}
+.cycle-legend-item span{
+  width:10px;height:10px;
+  border-radius:50%;
+  display:inline-block;
+}
+
 /* scrollbar */
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:100px;}
@@ -1139,6 +1305,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     </div>
     <div class="nav-item" onclick="go('photos',this)">
       <span class="nav-icon">📷</span> Our Photos
+    </div>
+
+    <div class="nav-lbl">Monthly Wellness 🌸</div>
+    <div class="nav-item" onclick="go('period',this)">
+      <span class="nav-icon">🌸</span> Monthly Wellness
     </div>
 
     <div class="nav-lbl">Resources</div>
@@ -2076,6 +2247,239 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 </div>
 
+<!-- ══ MONTHLY WELLNESS / PERIOD TRACKER ══ -->
+<div id="section-period" class="section">
+
+  <!-- HEADER CARD -->
+  <div class="card" style="background:linear-gradient(135deg,rgba(255,100,100,.08),rgba(244,167,192,.12));border:1px solid rgba(255,150,150,.2);margin-bottom:18px;">
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+      <div style="font-size:42px;">🌸</div>
+      <div style="flex:1;">
+        <div class="card-title" style="color:#c0405f;">Monthly Wellness Tracker</div>
+        <p style="font-size:13px;color:var(--text2);font-style:italic;margin:0;">
+          "I wish I could be there to take care of you every single day my love. 
+          This is my way of being there — tracking, caring, loving from afar. 💙 — Sohag"
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <!-- CYCLE SETUP -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title" style="color:#c0405f;">📅 My Cycle Info</div>
+        <div class="form-group">
+          <label class="form-label">Last Period Start Date</label>
+          <input type="date" class="form-input" id="cycle-start">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Period End Date</label>
+          <input type="date" class="form-input" id="cycle-end">
+        </div>
+        <div class="grid2">
+          <div class="form-group">
+            <label class="form-label">Cycle Length (days)</label>
+            <input type="number" class="form-input" value="28" min="20" max="45" id="cycle-length">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Period Length (days)</label>
+            <input type="number" class="form-input" value="5" min="2" max="10" id="period-length">
+          </div>
+        </div>
+        <button class="btn btn-sm" style="background:linear-gradient(135deg,#e05580,#c0405f);color:white;" onclick="saveCycleInfo()">
+          💙 Save Cycle Info
+        </button>
+
+        <!-- PREDICTIONS -->
+        <div id="cycle-predictions" style="margin-top:16px;display:none;">
+          <div style="background:rgba(255,100,100,.08);border-radius:var(--rs);padding:14px;border:1px solid rgba(255,150,150,.2);">
+            <div style="font-size:13px;font-weight:700;color:#c0405f;margin-bottom:8px;">📊 Cycle Predictions</div>
+            <div style="font-size:13px;color:var(--text2);">
+              🔴 Next period: <strong id="next-period-date">—</strong>
+            </div>
+            <div style="font-size:13px;color:var(--text2);margin-top:5px;">
+              💛 Ovulation: <strong id="ovulation-date">—</strong>
+            </div>
+            <div style="font-size:13px;color:var(--text2);margin-top:5px;">
+              💜 PMS starts: <strong id="pms-date">—</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODAY'S LOG -->
+      <div class="card">
+        <div class="card-title" style="color:#c0405f;">📝 Today's Log</div>
+
+        <!-- PHASE -->
+        <div class="form-group">
+          <label class="form-label">Current Phase</label>
+          <div class="period-phase-btns">
+            <button class="period-phase-btn active" onclick="setPhase('period',this)" style="background:rgba(220,50,50,.15);border-color:rgba(220,50,50,.4);color:#c0405f;">🔴 Period</button>
+            <button class="period-phase-btn" onclick="setPhase('pms',this)" style="background:rgba(150,80,200,.1);border-color:rgba(150,80,200,.3);color:#7b5ea7;">💜 PMS</button>
+            <button class="period-phase-btn" onclick="setPhase('ovulation',this)" style="background:rgba(200,180,50,.1);border-color:rgba(200,180,50,.3);color:#b8860b;">💛 Ovulation</button>
+            <button class="period-phase-btn" onclick="setPhase('regular',this)" style="background:rgba(91,155,213,.1);border-color:rgba(91,155,213,.3);color:var(--blue-deep);">💫 Regular</button>
+          </div>
+        </div>
+
+        <!-- PHASE MESSAGE -->
+        <div id="phase-message" class="period-phase-msg">
+          🔴 "Be extra gentle with yourself today my love. Rest, drink warm water, use a heating pad. I wish I could be there. 💙 — Sohag"
+        </div>
+
+        <!-- FLOW -->
+        <div class="form-group" id="flow-section">
+          <label class="form-label">Flow Level</label>
+          <div style="display:flex;gap:9px;">
+            <button class="period-flow-btn" onclick="setFlow('light',this)">🩸 Light</button>
+            <button class="period-flow-btn" onclick="setFlow('medium',this)">🩸🩸 Medium</button>
+            <button class="period-flow-btn active" onclick="setFlow('heavy',this)">🩸🩸🩸 Heavy</button>
+          </div>
+        </div>
+
+        <!-- PAIN LEVEL -->
+        <div class="form-group">
+          <label class="form-label">😣 Pain/Cramp Level</label>
+          <div class="period-pain-btns">
+            <button class="period-pain-btn" onclick="setPain(1,this)" title="Mild">1</button>
+            <button class="period-pain-btn" onclick="setPain(2,this)" title="Low">2</button>
+            <button class="period-pain-btn" onclick="setPain(3,this)" title="Moderate">3</button>
+            <button class="period-pain-btn" onclick="setPain(4,this)" title="High">4</button>
+            <button class="period-pain-btn" onclick="setPain(5,this)" title="Severe">5</button>
+          </div>
+        </div>
+
+        <!-- MOOD -->
+        <div class="form-group">
+          <label class="form-label">😊 Mood Today</label>
+          <div class="period-mood-btns">
+            <button class="period-mood-btn" onclick="setMood('😊 Happy',this)">😊</button>
+            <button class="period-mood-btn" onclick="setMood('😢 Sad',this)">😢</button>
+            <button class="period-mood-btn" onclick="setMood('😠 Irritable',this)">😠</button>
+            <button class="period-mood-btn" onclick="setMood('😴 Tired',this)">😴</button>
+            <button class="period-mood-btn" onclick="setMood('😰 Anxious',this)">😰</button>
+            <button class="period-mood-btn" onclick="setMood('🥰 Loved',this)">🥰</button>
+            <button class="period-mood-btn" onclick="setMood('😐 Neutral',this)">😐</button>
+            <button class="period-mood-btn" onclick="setMood('🤗 Calm',this)">🤗</button>
+          </div>
+        </div>
+
+        <!-- SYMPTOMS -->
+        <div class="form-group">
+          <label class="form-label">🌡️ Symptoms Today</label>
+          <div class="period-symptoms">
+            <label class="symptom-check"><input type="checkbox" value="😣 Cramps"> 😣 Cramps</label>
+            <label class="symptom-check"><input type="checkbox" value="🤕 Nausea"> 🤕 Nausea</label>
+            <label class="symptom-check"><input type="checkbox" value="🧠 Headache"> 🧠 Headache</label>
+            <label class="symptom-check"><input type="checkbox" value="💨 Bloating"> 💨 Bloating</label>
+            <label class="symptom-check"><input type="checkbox" value="😴 Fatigue"> 😴 Fatigue</label>
+            <label class="symptom-check"><input type="checkbox" value="😠 Mood swings"> 😠 Mood swings</label>
+            <label class="symptom-check"><input type="checkbox" value="💔 Back pain"> 💔 Back pain</label>
+            <label class="symptom-check"><input type="checkbox" value="🌡️ Fever"> 🌡️ Fever</label>
+          </div>
+        </div>
+
+        <!-- REMINDERS -->
+        <div class="form-group">
+          <label class="form-label">⏰ Reminders</label>
+          <div class="period-reminders">
+            <label class="symptom-check"><input type="checkbox" id="rem-water"> 💧 Extra water</label>
+            <label class="symptom-check"><input type="checkbox" id="rem-rest"> 😴 Rest reminder</label>
+            <label class="symptom-check"><input type="checkbox" id="rem-matcha"> 🍵 Warm matcha</label>
+            <label class="symptom-check"><input type="checkbox" id="rem-heat"> 🔥 Heating pad</label>
+            <label class="symptom-check"><input type="checkbox" id="rem-exercise"> 🧘 Gentle exercise</label>
+            <label class="symptom-check"><input type="checkbox" id="rem-meds"> 💊 Pain medication</label>
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="form-group">
+          <label class="form-label">📝 Notes</label>
+          <textarea class="form-textarea" placeholder="How are you feeling today my love? 💙" id="period-notes" style="min-height:70px;"></textarea>
+        </div>
+
+        <!-- MEDICATION -->
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:9px;cursor:pointer;font-size:13px;">
+            <input type="checkbox" id="period-meds-taken" style="width:16px;height:16px;">
+            💊 I took pain medication today
+          </label>
+        </div>
+
+        <button class="btn btn-sm" style="background:linear-gradient(135deg,#e05580,#c0405f);color:white;width:100%;" onclick="savePeriodLog()">
+          🌸 Save Today's Log
+        </button>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+
+      <!-- CYCLE CHART -->
+      <div class="card" style="margin-bottom:18px;">
+        <div class="card-title" style="color:#c0405f;">🔄 Cycle Overview</div>
+        <div style="display:flex;justify-content:center;margin:10px 0;">
+          <div class="cycle-chart-wrap">
+            <canvas id="cycle-chart" width="200" height="200"></canvas>
+            <div class="cycle-chart-center">
+              <div id="cycle-day-num" style="font-size:28px;font-weight:700;color:#c0405f;font-family:'Playfair Display',serif;">—</div>
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Day</div>
+            </div>
+          </div>
+        </div>
+        <div class="cycle-legend">
+          <div class="cycle-legend-item"><span style="background:#e05580;"></span>Period</div>
+          <div class="cycle-legend-item"><span style="background:#9b7fd4;"></span>PMS</div>
+          <div class="cycle-legend-item"><span style="background:#f7c948;"></span>Ovulation</div>
+          <div class="cycle-legend-item"><span style="background:#5b9bd5;"></span>Regular</div>
+        </div>
+      </div>
+
+      <!-- CARING TIPS -->
+      <div class="card" style="margin-bottom:18px;background:linear-gradient(135deg,rgba(255,100,100,.06),rgba(244,167,192,.08));border:1px solid rgba(255,150,150,.15);">
+        <div class="card-title" style="color:#c0405f;">💙 From Sohag</div>
+        <div class="tip-card" style="background:rgba(255,100,100,.06);border-color:rgba(255,150,150,.2);">
+          <div class="tip-icon">🔥</div>
+          <div class="tip-text">Use a heating pad on your lower abdomen — it helps with cramps so much my love 💙</div>
+        </div>
+        <div class="tip-card" style="background:rgba(255,100,100,.06);border-color:rgba(255,150,150,.2);">
+          <div class="tip-icon">🍵</div>
+          <div class="tip-text">Drink warm matcha or ginger tea — it soothes cramps and warms your soul 🌸</div>
+        </div>
+        <div class="tip-card" style="background:rgba(255,100,100,.06);border-color:rgba(255,150,150,.2);">
+          <div class="tip-icon">💧</div>
+          <div class="tip-text">Drink extra water today — at least 10 glasses. Your body needs it 💙</div>
+        </div>
+        <div class="tip-card" style="background:rgba(255,100,100,.06);border-color:rgba(255,150,150,.2);">
+          <div class="tip-icon">😴</div>
+          <div class="tip-text">Rest is not lazy — it's healing. You are allowed to rest today 🌸</div>
+        </div>
+        <div class="tip-card" style="background:rgba(255,100,100,.06);border-color:rgba(255,150,150,.2);">
+          <div class="tip-icon">🧘</div>
+          <div class="tip-text">Gentle yoga or stretching can reduce cramps. Try child's pose 💙</div>
+        </div>
+      </div>
+
+      <!-- LOG HISTORY -->
+      <div class="card">
+        <div class="card-title" style="color:#c0405f;">📊 Recent Logs</div>
+        <div id="period-history">
+          <p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">
+            No logs yet 🌸<br>
+            <span style="font-size:11px;">Start tracking today! 💙</span>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
   <!-- ══ ABBREVIATIONS ══ -->
   <div id="section-abbr" class="section">
     <div class="card">
@@ -2611,6 +3015,7 @@ const titles = {
   journal:'Health Journal 📓', stress:'Stress & Anxiety 🧘',
   pomodoro:'Pomodoro Focus Timer 🍅', breathe:'Breathing & Calm 🌬️',
   routines:'Daily Routines 📋',
+  period:'Monthly Wellness 🌸',
   selfcare:'Self-Care Checklist 🌸', goals:'Goals & Achievements 🌟',
   abbr:'Medical Abbreviations 📋', photos:"Jovie's Photo Gallery 📷"
 };
@@ -3046,6 +3451,244 @@ function addPhoto(e){
   };
   reader.readAsDataURL(file);
 }
+
+// ═══════════════════════════════════════
+// 🌸 PERIOD TRACKER
+// ═══════════════════════════════════════
+let selectedPhase = 'period';
+let selectedFlow = 'medium';
+let selectedPain = 0;
+let selectedMood = '';
+
+const PHASE_MESSAGES = {
+  period: '🔴 "Be extra gentle with yourself today my love. Rest, drink warm water, use a heating pad. I wish I could be there holding you. 💙 — Sohag"',
+  pms: '💜 "I understand you my love. PMS is real and valid. I love every version of you — even the moody one 😄💙 — Sohag"',
+  ovulation: '💛 "You are absolutely glowing today Angela! Your energy is beautiful. I can feel it from here. 💙 — Sohag"',
+  regular: '💫 "Just a regular day — but you make every day extraordinary my love. 💙 — Sohag"'
+};
+
+function setPhase(phase, btn){
+  selectedPhase = phase;
+  document.querySelectorAll('.period-phase-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const msg = document.getElementById('phase-message');
+  if(msg) msg.textContent = PHASE_MESSAGES[phase];
+  // Show/hide flow section
+  const flowSection = document.getElementById('flow-section');
+  if(flowSection) flowSection.style.display = phase==='period' ? 'block' : 'none';
+}
+
+function setFlow(flow, btn){
+  selectedFlow = flow;
+  document.querySelectorAll('.period-flow-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+function setPain(level, btn){
+  selectedPain = level;
+  document.querySelectorAll('.period-pain-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+function setMood(mood, btn){
+  selectedMood = mood;
+  document.querySelectorAll('.period-mood-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+}
+
+function savePeriodLog(){
+  // Get symptoms
+  const symptoms = [];
+  document.querySelectorAll('.period-symptoms input:checked').forEach(cb=>{
+    symptoms.push(cb.value);
+  });
+
+  const data = {
+    date: new Date().toISOString().split('T')[0],
+    phase: selectedPhase,
+    flow: selectedPhase === 'period' ? selectedFlow : '',
+    pain_level: selectedPain,
+    mood: selectedMood,
+    symptoms: symptoms,
+    notes: document.getElementById('period-notes') ? document.getElementById('period-notes').value : '',
+    medication_taken: document.getElementById('period-meds-taken') ? document.getElementById('period-meds-taken').checked : false,
+    water_reminder: document.getElementById('rem-water') ? document.getElementById('rem-water').checked : false,
+  };
+
+  fetch('/api/period/save/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify(data)
+  }).then(r=>r.json()).then(result=>{
+    if(result.status === 'ok'){
+      toast('🌸 Period log saved forever! 💙');
+      loadPeriodHistory();
+      // Reset notes
+      const notes = document.getElementById('period-notes');
+      if(notes) notes.value = '';
+    }
+  });
+}
+
+function saveCycleInfo(){
+  const start = document.getElementById('cycle-start');
+  const end = document.getElementById('cycle-end');
+  const length = document.getElementById('cycle-length');
+  const pLength = document.getElementById('period-length');
+
+  if(!start || !start.value){
+    toast('Please enter your last period start date! 💙');
+    return;
+  }
+
+  fetch('/api/cycle/save/', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-CSRFToken':CSRF},
+    body: JSON.stringify({
+      last_period_start: start.value,
+      last_period_end: end ? end.value : '',
+      cycle_length: length ? parseInt(length.value) : 28,
+      period_length: pLength ? parseInt(pLength.value) : 5,
+    })
+  }).then(r=>r.json()).then(data=>{
+    if(data.status === 'ok'){
+      toast('💙 Cycle info saved!');
+      if(data.next_period){
+        updateCyclePredictions(data.next_period, start.value, length ? parseInt(length.value) : 28);
+      }
+    }
+  });
+}
+
+function updateCyclePredictions(nextPeriod, lastStart, cycleLength){
+  const predictions = document.getElementById('cycle-predictions');
+  if(predictions) predictions.style.display = 'block';
+
+  const nextDate = new Date(nextPeriod);
+  const ovulationDate = new Date(new Date(lastStart));
+  ovulationDate.setDate(ovulationDate.getDate() + 14);
+  const pmsDate = new Date(nextDate);
+  pmsDate.setDate(pmsDate.getDate() - 5);
+
+  const options = {month:'short', day:'numeric', year:'numeric'};
+  const npd = document.getElementById('next-period-date');
+  const od = document.getElementById('ovulation-date');
+  const pd = document.getElementById('pms-date');
+
+  if(npd) npd.textContent = nextDate.toLocaleDateString('en-US', options);
+  if(od) od.textContent = ovulationDate.toLocaleDateString('en-US', options);
+  if(pd) pd.textContent = pmsDate.toLocaleDateString('en-US', options);
+
+  // Update cycle chart
+  drawCycleChart(cycleLength);
+}
+
+function drawCycleChart(cycleLength){
+  const canvas = document.getElementById('cycle-chart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx = 100, cy = 100, r = 80;
+
+  ctx.clearRect(0,0,200,200);
+
+  // Calculate today's cycle day
+  const cycleStart = document.getElementById('cycle-start');
+  let cycleDay = 1;
+  if(cycleStart && cycleStart.value){
+    const start = new Date(cycleStart.value);
+    const today = new Date();
+    cycleDay = Math.floor((today - start) / (1000*60*60*24)) % cycleLength + 1;
+  }
+
+  // Draw segments
+  const segments = [
+    { days: 5, color: '#e05580', label: 'Period' },
+    { days: 9, color: '#5b9bd5', label: 'Regular' },
+    { days: 2, color: '#f7c948', label: 'Ovulation' },
+    { days: cycleLength - 16, color: '#5b9bd5', label: 'Regular' },
+    { days: 5, color: '#9b7fd4', label: 'PMS' },
+  ];
+
+  let startAngle = -Math.PI/2;
+  segments.forEach(seg=>{
+    const angle = (seg.days / cycleLength) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,startAngle,startAngle+angle);
+    ctx.closePath();
+    ctx.fillStyle = seg.color;
+    ctx.globalAlpha = 0.7;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    startAngle += angle;
+  });
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx,cy,45,0,Math.PI*2);
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--surface') || '#fff';
+  ctx.fill();
+
+  // Update day number
+  const dayNum = document.getElementById('cycle-day-num');
+  if(dayNum) dayNum.textContent = cycleDay;
+}
+
+function loadPeriodHistory(){
+  fetch('/api/period/get/')
+    .then(r=>r.json())
+    .then(data=>{
+      const el = document.getElementById('period-history');
+      if(!el) return;
+      if(data.logs && data.logs.length > 0){
+        const phaseColors = {
+          period:'#e05580', pms:'#9b7fd4',
+          ovulation:'#f7c948', regular:'#5b9bd5'
+        };
+        const phaseEmojis = {
+          period:'🔴', pms:'💜',
+          ovulation:'💛', regular:'💫'
+        };
+        el.innerHTML = data.logs.slice(0,7).map(log=>`
+          <div style="padding:11px 13px;background:var(--surface2);border-radius:var(--rs);border:1px solid var(--border);margin-bottom:7px;border-left:3px solid ${phaseColors[log.phase]||'#e05580'};">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+              <strong style="font-size:13px;">${phaseEmojis[log.phase]||'🌸'} ${log.date}</strong>
+              <span style="font-size:11px;color:var(--muted);">Pain: ${log.pain_level}/5</span>
+            </div>
+            ${log.mood ? `<div style="font-size:12px;color:var(--text2);">Mood: ${log.mood}</div>` : ''}
+            ${log.symptoms && log.symptoms.length > 0 ? `<div style="font-size:11px;color:var(--muted);margin-top:3px;">${log.symptoms.join(' • ')}</div>` : ''}
+            ${log.notes ? `<div style="font-size:12px;font-style:italic;color:var(--text2);margin-top:4px;">"${log.notes}"</div>` : ''}
+          </div>
+        `).join('');
+      } else {
+        el.innerHTML = '<p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;">No logs yet 🌸</p>';
+      }
+    });
+}
+
+// Load cycle info on start
+function loadCycleInfo(){
+  fetch('/api/cycle/get/')
+    .then(r=>r.json())
+    .then(data=>{
+      if(data.last_period_start){
+        const start = document.getElementById('cycle-start');
+        const end = document.getElementById('cycle-end');
+        const length = document.getElementById('cycle-length');
+        const pLength = document.getElementById('period-length');
+        if(start) start.value = data.last_period_start;
+        if(end && data.last_period_end) end.value = data.last_period_end;
+        if(length) length.value = data.cycle_length;
+        if(pLength) pLength.value = data.period_length;
+        if(data.next_period){
+          updateCyclePredictions(data.next_period, data.last_period_start, data.cycle_length);
+        }
+      }
+      drawCycleChart(28);
+      loadPeriodHistory();
+    });
+}
+loadCycleInfo();
 
 // ═══════════════ FAB ═══════════════
 let fabOpen=false;
