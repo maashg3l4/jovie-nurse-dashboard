@@ -1096,8 +1096,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   transition:all .25s;
 }
 .period-phase-btn.active{
-  transform:scale(1.05);
+  transform:scale(1.05) translateY(-2px);
   box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+.period-phase-btn:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 6px 15px rgba(224,85,128,.25);
 }
 .period-phase-msg{
   background:linear-gradient(135deg,rgba(255,100,100,.08),rgba(244,167,192,.1));
@@ -1122,10 +1126,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   cursor:pointer;
   transition:all .25s;
 }
+.period-flow-btn:hover{
+  transform:translateY(-3px) scale(1.03);
+  box-shadow:0 6px 15px rgba(224,85,128,.25);
+  background:rgba(224,85,128,.1);
+}
 .period-flow-btn.active{
   background:linear-gradient(135deg,#e05580,#c0405f);
   color:white;
   border-color:transparent;
+  transform:translateY(-3px);
+  box-shadow:0 6px 15px rgba(224,85,128,.4);
 }
 .period-pain-btns{
   display:flex;
@@ -1147,11 +1158,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   align-items:center;
   justify-content:center;
 }
+.period-pain-btn:hover{
+  transform:scale(1.15) translateY(-2px);
+  box-shadow:0 4px 12px rgba(224,85,128,.3);
+  border-color:#e05580;
+  color:#e05580;
+}
 .period-pain-btn.active{
   background:linear-gradient(135deg,#e05580,#c0405f);
   color:white;
   border-color:transparent;
-  transform:scale(1.1);
+  transform:scale(1.15) translateY(-2px);
+  box-shadow:0 4px 12px rgba(224,85,128,.4);
 }
 .period-mood-btns{
   display:flex;
@@ -1171,10 +1189,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   align-items:center;
   justify-content:center;
 }
+.period-mood-btn:hover{
+  transform:scale(1.2) translateY(-3px);
+  box-shadow:0 6px 15px rgba(224,85,128,.25);
+  border-color:rgba(224,85,128,.5);
+}
 .period-mood-btn.active{
   border-color:#e05580;
-  transform:scale(1.15);
-  box-shadow:0 4px 12px rgba(224,85,128,.3);
+  transform:scale(1.2) translateY(-3px);
+  box-shadow:0 6px 18px rgba(224,85,128,.4);
 }
 .period-symptoms{
   display:grid;
@@ -1196,8 +1219,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   transition:all .2s;
 }
 .symptom-check:hover{
-  border-color:rgba(255,150,150,.4);
-  background:rgba(255,100,100,.05);
+  border-color:rgba(224,85,128,.5);
+  background:rgba(224,85,128,.08);
+  transform:translateY(-2px);
+  box-shadow:0 4px 10px rgba(224,85,128,.15);
 }
 .symptom-check input{
   accent-color:#e05580;
