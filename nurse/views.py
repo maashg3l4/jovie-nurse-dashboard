@@ -298,41 +298,22 @@ def toggle_routine(request):
 # LOVE LETTER
 # ═══════════════════════════════════════
 def get_love_letter(request):
-    from datetime import date
-    today = date.today()
-    unlock_date = date(2026, 3, 22)
-    # Force unlock on March 22
-    if today >= unlock_date:
-        try:
-            letter = LoveLetter.objects.first()
-            content = letter.content if letter else "My Dearest Angela..."
-        except:
-            content = "My Dearest Angela..."
-        return JsonResponse({
-            'status': 'unlocked',
-            'content': content,
-            'message': 'Your letter is here my love 💌'
-        })
-    days_remaining = (unlock_date - today).days
-
     try:
         letter = LoveLetter.objects.first()
-        content = letter.content if letter else ""
-    except:
-        content = ""
-
-    if today >= unlock_date:
-        return JsonResponse({
-            'status': 'unlocked',
-            'content': content,
-            'message': 'Your letter is here my love 💌'
-        })
-    else:
-        return JsonResponse({
-            'status': 'locked',
-            'days_remaining': days_remaining,
-            'message': f'Your letter opens in {days_remaining} days 💙'
-        })
+        if letter:
+            return JsonResponse({
+                'status': 'unlocked',
+                'content': letter.content,
+                'message': 'Your letter is here my love 💌'
+            })
+        else:
+            return JsonResponse({
+                'status': 'unlocked',
+                'content': 'My Dearest Angela... 💙',
+                'message': 'Your letter is here my love 💌'
+            })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
         
         # ═══════════════════════════════════════
 # GOALS API
