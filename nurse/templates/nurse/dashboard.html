@@ -2667,7 +2667,6 @@ function updateLetterCD(){
   var now = new Date();
   var diff = letterUnlock - now;
   if(diff <= 0){
-    openLetter();
     return;
   }
   var d = Math.floor(diff/86400000);
@@ -2686,8 +2685,13 @@ function updateLetterCD(){
 updateLetterCD();
 setInterval(updateLetterCD, 1000);
 
-// Open letter NOW — today is March 22! 💌
-setTimeout(function(){ openLetter(); }, 2000);
+// Open letter ONCE on March 22! 💌
+if(!sessionStorage.getItem('letterOpened')){
+  setTimeout(function(){
+    openLetter();
+    sessionStorage.setItem('letterOpened', 'true');
+  }, 2000);
+}
 
 
 
