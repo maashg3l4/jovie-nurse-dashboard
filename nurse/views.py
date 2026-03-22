@@ -301,6 +301,18 @@ def get_love_letter(request):
     from datetime import date
     today = date.today()
     unlock_date = date(2026, 3, 22)
+    # Force unlock on March 22
+    if today >= unlock_date:
+        try:
+            letter = LoveLetter.objects.first()
+            content = letter.content if letter else "My Dearest Angela..."
+        except:
+            content = "My Dearest Angela..."
+        return JsonResponse({
+            'status': 'unlocked',
+            'content': content,
+            'message': 'Your letter is here my love 💌'
+        })
     days_remaining = (unlock_date - today).days
 
     try:
