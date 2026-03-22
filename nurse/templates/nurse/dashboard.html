@@ -1215,6 +1215,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   padding:6px 10px;
   border-radius:var(--rs);
   background:var(--surface2);
+
+
+  
   border:1px solid var(--border);
   transition:all .2s;
 }
@@ -2555,83 +2558,126 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 <script>
 const CSRF = "{{ csrf_token }}";
 
+// ═══════════════ UTILS — MUST BE FIRST! ═══════════════
+var $ = function(id){ return document.getElementById(id); };
+function pad(n){ return String(n).padStart(2,'0'); }
+function toast(msg){
+  var t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+
+// ═══════════════ COUNTDOWN ═══════════════
+var since = new Date('2025-02-22T00:00:00');
+function updateCD(){
+  var diff = Date.now() - since.getTime();
+  var d = Math.floor(diff/86400000);
+  var h = Math.floor((diff%86400000)/3600000);
+  var m = Math.floor((diff%3600000)/60000);
+  var s = Math.floor((diff%60000)/1000);
+  var dEl = document.getElementById('cd-d');
+  var hEl = document.getElementById('cd-h');
+  var mEl = document.getElementById('cd-m');
+  var sEl = document.getElementById('cd-s');
+  if(dEl) dEl.textContent = d;
+  if(hEl) hEl.textContent = pad(h);
+  if(mEl) mEl.textContent = pad(m);
+  if(sEl) sEl.textContent = pad(s);
+}
+updateCD();
+setInterval(updateCD, 1000);
+
 // ═══════════════════════════════════════
 // 💌 SECRET LOVE LETTER
 // ═══════════════════════════════════════
-
-// Sakura petals for letter
 function startSakura(){
-  const canvas = $('sakura-canvas');
+  var canvas = document.getElementById('sakura-canvas');
   if(!canvas) return;
   canvas.classList.add('active');
-  const ctx = canvas.getContext('2d');
+  var ctx = canvas.getContext('2d');
   canvas.width = innerWidth;
   canvas.height = innerHeight;
-  addEventListener('resize',()=>{
+  addEventListener('resize',function(){
     canvas.width=innerWidth;
     canvas.height=innerHeight;
   });
-  const petals = Array.from({length:60},()=>({
-    x: Math.random()*innerWidth,
-    y: Math.random()*innerHeight - innerHeight,
-    size: 8+Math.random()*12,
-    speedY: 1+Math.random()*2,
-    speedX: (Math.random()-.5)*1.5,
-    rotation: Math.random()*360,
-    rotSpeed: (Math.random()-.5)*3,
-    opacity: .4+Math.random()*.6,
-    color: Math.random()>.33?'#f4a7c0':Math.random()>.5?'#fce4ed':'#ffb7c5'
-  }));
-  function drawPetal(ctx,x,y,size,rotation,color,opacity){
-    ctx.save();
-    ctx.translate(x,y);
-    ctx.rotate(rotation*Math.PI/180);
-    ctx.globalAlpha=opacity;
-    ctx.beginPath();
-if(Math.random()>.5){
-  // Sakura petal 🌸
-  ctx.moveTo(0,-size/2);
-  ctx.bezierCurveTo(size/2,-size/2,size/2,size/2,0,size/2);
-  ctx.bezierCurveTo(-size/2,size/2,-size/2,-size/2,0,-size/2);
-} else {
-  // Lily petal 🌺
-  ctx.ellipse(0,0,size/3,size/1.5,0,0,Math.PI*2);
-}
-ctx.fillStyle=color;
-ctx.fill();
-ctx.restore();
+  var petals = [];
+  for(var i=0;i<60;i++){
+    petals.push({
+      x: Math.random()*innerWidth,
+      y: Math.random()*innerHeight - innerHeight,
+      size: 8+Math.random()*12,
+      speedY: 1+Math.random()*2,
+      speedX: (Math.random()-.5)*1.5,
+      rotation: Math.random()*360,
+      rotSpeed: (Math.random()-.5)*3,
+      opacity: .4+Math.random()*.6,
+      color: Math.random()>.5?'#f4a7c0':'#ffb7c5'
+    });
   }
   function animate(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    petals.forEach(p=>{
-      drawPetal(ctx,p.x,p.y,p.size,p.rotation,p.color,p.opacity);
+    petals.forEach(function(p){
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rotation*Math.PI/180);
+      ctx.globalAlpha=p.opacity;
+      ctx.beginPath();
+      ctx.ellipse(0,0,p.size/3,p.size/1.5,0,0,Math.PI*2);
+      ctx.fillStyle=p.color;
+      ctx.fill();
+      ctx.restore();
       p.y+=p.speedY; p.x+=p.speedX; p.rotation+=p.rotSpeed;
-      if(p.y>canvas.height+20){
-        p.y=-20; p.x=Math.random()*canvas.width;
-      }
+      if(p.y>canvas.height+20){ p.y=-20; p.x=Math.random()*canvas.width; }
     });
     requestAnimationFrame(animate);
   }
   animate();
 }
 
+function openLetter(){
+  startSakura();
+  toast('💌 Your letter is here Angela! 🌸');
+  fetch('/api/letter/')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.status === 'unlocked'){
+        var locked = document.getElementById('letter-locked');
+        var unlocked = document.getElementById('letter-unlocked');
+        if(locked){ locked.style.opacity='0'; setTimeout(function(){ locked.style.display='none'; },500); }
+        if(unlocked){
+          setTimeout(function(){
+            unlocked.style.display='flex';
+            var content = document.getElementById('letter-content');
+            if(content && data.content){
+              content.textContent = data.content;
+            }
+          },600);
+        }
+      }
+    })
+    .catch(function(e){ console.log('Letter error:',e); });
+}
+
 // Letter countdown
-const letterUnlock = new Date('2026-03-22T00:00:00');
+var letterUnlock = new Date('2026-03-22T00:00:00');
 function updateLetterCD(){
-  const now = new Date();
-  const diff = letterUnlock - now;
+  var now = new Date();
+  var diff = letterUnlock - now;
   if(diff <= 0){
     openLetter();
     return;
   }
-  const d = Math.floor(diff/86400000);
-  const h = Math.floor((diff%86400000)/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  const ld = document.getElementById('lcd-d');
-  const lh = document.getElementById('lcd-h');
-  const lm = document.getElementById('lcd-m');
-  const ls = document.getElementById('lcd-s');
+  var d = Math.floor(diff/86400000);
+  var h = Math.floor((diff%86400000)/3600000);
+  var m = Math.floor((diff%3600000)/60000);
+  var s = Math.floor((diff%60000)/1000);
+  var ld = document.getElementById('lcd-d');
+  var lh = document.getElementById('lcd-h');
+  var lm = document.getElementById('lcd-m');
+  var ls = document.getElementById('lcd-s');
   if(ld) ld.textContent = d;
   if(lh) lh.textContent = pad(h);
   if(lm) lm.textContent = pad(m);
@@ -2640,63 +2686,10 @@ function updateLetterCD(){
 updateLetterCD();
 setInterval(updateLetterCD, 1000);
 
-// Open letter with beautiful animation
-function openLetter(){
-  // Start sakura petals! 🌸
-  startSakura();
+// Open letter NOW — today is March 22! 💌
+setTimeout(function(){ openLetter(); }, 2000);
 
-  // Fetch letter from database
-  fetch('/api/letter/')
-    .then(r=>r.json())
-    .then(data=>{
-      if(data.status === 'unlocked'){
-        // Hide locked, show unlocked
-        const locked = $('letter-locked');
-        const unlocked = $('letter-unlocked');
 
-        // Animate envelope opening first
-        const envelope = $('envelope-wrap');
-        if(envelope){
-          envelope.style.transform='scale(1.2)';
-          setTimeout(()=>{
-            if(locked) locked.style.opacity='0';
-            setTimeout(()=>{
-              if(locked) locked.style.display='none';
-              if(unlocked) unlocked.style.display='flex';
-              // Type the letter slowly 💌
-              const content = $('letter-content');
-              if(content && data.content){
-                content.textContent='';
-                let i=0;
-                const text = data.content;
-                function typeWriter(){
-                  if(i<text.length){
-                    content.textContent+=text.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 18);
-                  }
-                }
-                typeWriter();
-              }
-            },500);
-          },800);
-        }
-      }
-    })
-    .catch(err=>console.log('Letter:', err));
-}
-
-// Check if today is March 22 or later
-const today = new Date();
-const unlockDay = new Date('2026-03-22T00:00:00');
-if(today >= unlockDay){
-  openLetter();
-}
-
-// ═══════════════ UTILS ═══════════════
-const $ = id => document.getElementById(id);
-function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2800); }
-function pad(n){ return String(n).padStart(2,'0'); }
 
 // ═══════════════════════════════════════
 // 🌟 GOALS KANBAN
@@ -3024,15 +3017,26 @@ document.querySelectorAll('input[type="date"]').forEach(el => el.value = now.toI
 document.querySelectorAll('input[type="datetime-local"]').forEach(el => el.value = now.toISOString().slice(0,16));
 
 // ═══════════════ COUNTDOWN ═══════════════
-const since = new Date('2025-02-22T00:00:00');
+var since = new Date('2025-02-22T00:00:00');
+
+// COUNTDOWN FIX
 function updateCD(){
-  const diff = Date.now() - since;
-  $('cd-d').textContent = Math.floor(diff/86400000);
-  $('cd-h').textContent = pad(Math.floor((diff%86400000)/3600000));
-  $('cd-m').textContent = pad(Math.floor((diff%3600000)/60000));
-  $('cd-s').textContent = pad(Math.floor((diff%60000)/1000));
+  var diff = Date.now() - since.getTime();
+  var d = Math.floor(diff/86400000);
+  var h = Math.floor((diff%86400000)/3600000);
+  var m = Math.floor((diff%3600000)/60000);
+  var s = Math.floor((diff%60000)/1000);
+  var dEl = document.getElementById('cd-d');
+  var hEl = document.getElementById('cd-h');
+  var mEl = document.getElementById('cd-m');
+  var sEl = document.getElementById('cd-s');
+  if(dEl) dEl.textContent = d;
+  if(hEl) hEl.textContent = (h<10?'0':'')+h;
+  if(mEl) mEl.textContent = (m<10?'0':'')+m;
+  if(sEl) sEl.textContent = (s<10?'0':'')+s;
 }
-updateCD(); setInterval(updateCD, 1000);
+setInterval(updateCD, 1000);
+setTimeout(updateCD, 100);
 
 // ═══════════════ NAV ═══════════════
 const titles = {
@@ -3054,7 +3058,7 @@ function go(name, navEl){
 // ═══════════════════════════════════════
 // SIDEBAR TOGGLE 💙
 // ═══════════════════════════════════════
-let sidebarOpen = true;
+var sidebarOpen = true;
 function toggleSidebar(){
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('sidebar-toggle');
