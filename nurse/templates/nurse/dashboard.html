@@ -1237,6 +1237,133 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
   margin-top:6px;
 }
 
+/* ═══════════════════════════════════════
+   🗓️ CYCLE CALENDAR
+═══════════════════════════════════════ */
+.cycle-calendar-wrap{
+  border-radius:var(--rs);
+  overflow:hidden;
+  border:1px solid rgba(255,150,150,.2);
+  margin-bottom:14px;
+}
+.cycle-cal-headers{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  background:linear-gradient(135deg,#e05580,#c0405f);
+  color:white;
+}
+.cycle-cal-headers div{
+  text-align:center;
+  padding:8px 4px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.5px;
+}
+.cycle-cal-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  background:var(--surface2);
+  gap:2px;
+  padding:4px;
+}
+.cal-day{
+  aspect-ratio:1;
+  border-radius:8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .2s;
+  padding:3px;
+  min-height:44px;
+  position:relative;
+}
+.cal-day:hover{
+  transform:scale(1.08);
+  box-shadow:0 4px 12px rgba(224,85,128,.3);
+  z-index:1;
+}
+.cal-day.empty{
+  background:transparent;
+  cursor:default;
+}
+.cal-day.empty:hover{
+  transform:none;
+  box-shadow:none;
+}
+.cal-day-num{
+  font-size:13px;
+  font-weight:700;
+  line-height:1;
+}
+.cal-day-label{
+  font-size:8px;
+  text-align:center;
+  line-height:1.2;
+  margin-top:2px;
+  opacity:.8;
+}
+.cal-day-petal{
+  font-size:8px;
+  position:absolute;
+  top:2px;
+  right:2px;
+}
+.cal-day.today{
+  box-shadow:0 0 0 2px #e05580, 0 0 12px rgba(224,85,128,.4)!important;
+}
+.cal-day.period{
+  background:rgba(224,85,128,.25);
+  border:1px solid rgba(224,85,128,.5);
+  color:#c0405f;
+}
+.cal-day.pms{
+  background:rgba(155,127,212,.2);
+  border:1px solid rgba(155,127,212,.4);
+  color:#7b5ea7;
+}
+.cal-day.ovulation{
+  background:rgba(247,201,72,.2);
+  border:1px solid rgba(247,201,72,.5);
+  color:#b8860b;
+}
+.cal-day.regular{
+  background:rgba(91,155,213,.1);
+  border:1px solid rgba(91,155,213,.25);
+  color:var(--blue-deep);
+}
+.cal-day.predicted{
+  background:rgba(255,100,100,.06);
+  border:1.5px dashed rgba(224,85,128,.4);
+  color:#c0405f;
+}
+.cal-day.predicted .cal-day-num{
+  opacity:.7;
+}
+
+/* LEGEND */
+.cycle-cal-legend{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-top:10px;
+}
+.cal-legend-item{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  color:var(--text2);
+}
+.cal-legend-item span{
+  width:14px;height:14px;
+  border-radius:4px;
+  display:inline-block;
+  flex-shrink:0;
+}
+
 /* CYCLE CHART */
 .cycle-chart-wrap{
   position:relative;
@@ -2448,6 +2575,58 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
     <!-- RIGHT COLUMN -->
     <div>
 
+    <!-- CYCLE CALENDAR 🗓️ -->
+<div class="card" style="margin-bottom:18px;">
+  <div class="card-title" style="color:#c0405f;">🗓️ Cycle Calendar</div>
+
+  <!-- MONTH SELECTOR -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <select id="cal-month-select" class="form-select" style="width:auto;min-width:140px;" onchange="renderCalendar()">
+    </select>
+    <div style="font-size:12px;color:var(--text2);font-style:italic;">
+      💙 "I track every day because I care about you" — Sohag
+    </div>
+  </div>
+
+  <!-- CALENDAR GRID -->
+  <div class="cycle-calendar-wrap">
+    <!-- DAY HEADERS -->
+    <div class="cycle-cal-headers">
+      <div>Sun</div><div>Mon</div><div>Tue</div>
+      <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+    <!-- CALENDAR DAYS -->
+    <div class="cycle-cal-grid" id="cycle-cal-grid"></div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="cycle-cal-legend">
+    <div class="cal-legend-item"><span style="background:rgba(224,85,128,.3);border:1px solid #e05580;"></span>🔴 Period</div>
+    <div class="cal-legend-item"><span style="background:rgba(155,127,212,.2);border:1px solid #9b7fd4;"></span>💜 PMS</div>
+    <div class="cal-legend-item"><span style="background:rgba(247,201,72,.2);border:1px solid #f7c948;"></span>💛 Ovulation</div>
+    <div class="cal-legend-item"><span style="background:rgba(91,155,213,.15);border:1px solid #5b9bd5;"></span>💙 Regular</div>
+    <div class="cal-legend-item"><span style="background:rgba(255,100,100,.1);border:2px dashed #e05580;"></span>🔮 Predicted</div>
+  </div>
+
+  <!-- SELECTED DAY INFO -->
+  <div id="cal-day-info" style="display:none;margin-top:14px;padding:13px;background:linear-gradient(135deg,rgba(255,100,100,.06),rgba(244,167,192,.08));border-radius:var(--rs);border:1px solid rgba(255,150,150,.2);">
+    <div id="cal-day-info-content"></div>
+  </div>
+</div>
+
+<!-- 6 MONTH PREDICTIONS 🔮 -->
+<div class="card" style="margin-bottom:18px;background:linear-gradient(135deg,rgba(155,127,212,.06),rgba(247,201,72,.05));border:1px solid rgba(155,127,212,.2);">
+  <div class="card-title" style="color:#7b5ea7;">🔮 Next 6 Months Predictions</div>
+  <p style="font-size:13px;color:var(--text2);font-style:italic;margin-bottom:14px;">
+    "I want you to always be prepared my love — never be caught off guard 💙 — Sohag"
+  </p>
+  <div id="six-month-predictions" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+    <p style="font-size:13px;color:var(--muted);text-align:center;padding:18px;grid-column:1/-1;">
+      Save your cycle info to see predictions! 💙
+    </p>
+  </div>
+</div>
+
       <!-- CYCLE CHART -->
       <div class="card" style="margin-bottom:18px;">
         <div class="card-title" style="color:#c0405f;">🔄 Cycle Overview</div>
@@ -3020,27 +3199,7 @@ $('pg-date').textContent = now.toLocaleDateString('en-US',{weekday:'long',year:'
 document.querySelectorAll('input[type="date"]').forEach(el => el.value = now.toISOString().split('T')[0]);
 document.querySelectorAll('input[type="datetime-local"]').forEach(el => el.value = now.toISOString().slice(0,16));
 
-// ═══════════════ COUNTDOWN ═══════════════
-var since = new Date('2025-02-22T00:00:00');
 
-// COUNTDOWN FIX
-function updateCD(){
-  var diff = Date.now() - since.getTime();
-  var d = Math.floor(diff/86400000);
-  var h = Math.floor((diff%86400000)/3600000);
-  var m = Math.floor((diff%3600000)/60000);
-  var s = Math.floor((diff%60000)/1000);
-  var dEl = document.getElementById('cd-d');
-  var hEl = document.getElementById('cd-h');
-  var mEl = document.getElementById('cd-m');
-  var sEl = document.getElementById('cd-s');
-  if(dEl) dEl.textContent = d;
-  if(hEl) hEl.textContent = (h<10?'0':'')+h;
-  if(mEl) mEl.textContent = (m<10?'0':'')+m;
-  if(sEl) sEl.textContent = (s<10?'0':'')+s;
-}
-setInterval(updateCD, 1000);
-setTimeout(updateCD, 100);
 
 // ═══════════════ NAV ═══════════════
 const titles = {
@@ -3699,6 +3858,228 @@ function loadPeriodHistory(){
     });
 }
 
+// ═══════════════════════════════════════
+// 🗓️ CYCLE CALENDAR
+// ═══════════════════════════════════════
+
+// Setup month selector
+function setupMonthSelector(){
+  const select = document.getElementById('cal-month-select');
+  if(!select) return;
+  const now = new Date();
+  select.innerHTML = '';
+  const months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  // Show current month + 5 future months
+  for(let i = -1; i <= 6; i++){
+    const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+    const opt = document.createElement('option');
+    opt.value = d.getFullYear() + '-' + (d.getMonth()+1);
+    opt.textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+    if(i === 0) opt.selected = true;
+    select.appendChild(opt);
+  }
+}
+
+// Get cycle phase for a specific date
+function getPhaseForDate(date, cycleStart, cycleLength, periodLength){
+  if(!cycleStart) return 'regular';
+  const start = new Date(cycleStart);
+  const diffDays = Math.floor((date - start) / (1000*60*60*24));
+  if(diffDays < 0){
+    // Before cycle start — calculate backwards
+    const cycleDay = ((diffDays % cycleLength) + cycleLength) % cycleLength;
+    return getPhaseFromCycleDay(cycleDay, cycleLength, periodLength);
+  }
+  const cycleDay = diffDays % cycleLength;
+  return getPhaseFromCycleDay(cycleDay, cycleLength, periodLength);
+}
+
+function getPhaseFromCycleDay(cycleDay, cycleLength, periodLength){
+  if(cycleDay < periodLength) return 'period';
+  if(cycleDay >= cycleLength - 5) return 'pms';
+  if(cycleDay >= 12 && cycleDay <= 14) return 'ovulation';
+  return 'regular';
+}
+
+// Phase labels
+const PHASE_LABELS = {
+  period: '🔴 Period',
+  pms: '💜 PMS',
+  ovulation: '💛 Ovulation',
+  regular: '💙 Regular'
+};
+
+const PHASE_MESSAGES_CAL = {
+  period: '"Rest well today my love. Use heating pad. Drink warm matcha. 💙 — Sohag"',
+  pms: '"I understand you completely my love. All your feelings are valid. 💜 — Sohag"',
+  ovulation: '"You are glowing today Angela! Your energy is so beautiful! 💛 — Sohag"',
+  regular: '"Just a regular day — but you make every day special. 💙 — Sohag"'
+};
+
+// Render calendar
+function renderCalendar(){
+  const select = document.getElementById('cal-month-select');
+  if(!select || !select.value) return;
+
+  const parts = select.value.split('-');
+  const year = parseInt(parts[0]);
+  const month = parseInt(parts[1]) - 1;
+
+  const grid = document.getElementById('cycle-cal-grid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  const today = new Date();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDayOfWeek = firstDay.getDay();
+
+  // Get cycle info
+  const cycleStartEl = document.getElementById('cycle-start');
+  const cycleLengthEl = document.getElementById('cycle-length');
+  const periodLengthEl = document.getElementById('period-length');
+  const cycleStart = cycleStartEl ? cycleStartEl.value : null;
+  const cycleLength = cycleLengthEl ? parseInt(cycleLengthEl.value) || 28 : 28;
+  const periodLength = periodLengthEl ? parseInt(periodLengthEl.value) || 5 : 5;
+
+  // Empty cells before first day
+  for(let i = 0; i < startDayOfWeek; i++){
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+
+  // Day cells
+  for(let day = 1; day <= lastDay.getDate(); day++){
+    const date = new Date(year, month, day);
+    const isToday = date.toDateString() === today.toDateString();
+    const isFuture = date > today;
+
+    let phase = 'regular';
+    let isPredicted = false;
+
+    if(cycleStart){
+      phase = getPhaseForDate(date, cycleStart, cycleLength, periodLength);
+      if(isFuture) isPredicted = true;
+    }
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-day ' + (isPredicted ? 'predicted' : phase);
+    if(isToday) cell.classList.add('today');
+
+    // Day number
+    const numEl = document.createElement('div');
+    numEl.className = 'cal-day-num';
+    numEl.textContent = day;
+    cell.appendChild(numEl);
+
+    // Phase label
+    if(cycleStart && phase !== 'regular'){
+      const labelEl = document.createElement('div');
+      labelEl.className = 'cal-day-label';
+      const labels = {period:'Period', pms:'PMS', ovulation:'Ovul.'};
+      labelEl.textContent = labels[phase] || '';
+      cell.appendChild(labelEl);
+    }
+
+    // Flower petal on period days
+    if(phase === 'period'){
+      const petal = document.createElement('div');
+      petal.className = 'cal-day-petal';
+      petal.textContent = '🌸';
+      cell.appendChild(petal);
+    }
+
+    // Click to show info
+    cell.onclick = function(){
+      showDayInfo(date, phase, isPredicted, isToday);
+    };
+
+    grid.appendChild(cell);
+  }
+
+  // Update 6 month predictions
+  if(cycleStart){
+    renderSixMonthPredictions(cycleStart, cycleLength, periodLength);
+  }
+}
+
+// Show day info when clicked
+function showDayInfo(date, phase, isPredicted, isToday){
+  const infoEl = document.getElementById('cal-day-info');
+  const contentEl = document.getElementById('cal-day-info-content');
+  if(!infoEl || !contentEl) return;
+
+  const options = {weekday:'long', month:'long', day:'numeric', year:'numeric'};
+  const dateStr = date.toLocaleDateString('en-US', options);
+
+  const phaseColors = {
+    period:'#e05580', pms:'#9b7fd4',
+    ovulation:'#f7c948', regular:'#5b9bd5'
+  };
+
+  contentEl.innerHTML = `
+    <div style="font-weight:700;font-size:14px;color:${phaseColors[phase]};margin-bottom:8px;">
+      ${isToday ? '✨ Today — ' : ''}${dateStr}
+    </div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:8px;">
+      ${PHASE_LABELS[phase]} ${isPredicted ? '(Predicted)' : ''}
+    </div>
+    <div style="font-size:12px;font-style:italic;color:var(--text);border-left:3px solid ${phaseColors[phase]};padding-left:10px;line-height:1.6;">
+      ${PHASE_MESSAGES_CAL[phase]}
+    </div>
+    ${phase === 'period' ? `
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:7px;">
+      <span style="background:rgba(224,85,128,.1);border:1px solid rgba(224,85,128,.3);border-radius:100px;padding:4px 10px;font-size:11px;">🔥 Use heating pad</span>
+      <span style="background:rgba(224,85,128,.1);border:1px solid rgba(224,85,128,.3);border-radius:100px;padding:4px 10px;font-size:11px;">🍵 Warm matcha</span>
+      <span style="background:rgba(224,85,128,.1);border:1px solid rgba(224,85,128,.3);border-radius:100px;padding:4px 10px;font-size:11px;">💧 Extra water</span>
+      <span style="background:rgba(224,85,128,.1);border:1px solid rgba(224,85,128,.3);border-radius:100px;padding:4px 10px;font-size:11px;">😴 Rest well</span>
+    </div>` : ''}
+  `;
+  infoEl.style.display = 'block';
+}
+
+// 6 month predictions
+function renderSixMonthPredictions(cycleStart, cycleLength, periodLength){
+  const container = document.getElementById('six-month-predictions');
+  if(!container) return;
+  const start = new Date(cycleStart);
+  const today = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let nextPeriod = new Date(start);
+  while(nextPeriod <= today){
+    nextPeriod = new Date(nextPeriod.getTime() + cycleLength * 24*60*60*1000);
+  }
+  let html = '';
+  for(let i = 0; i < 6; i++){
+    const periodStart = new Date(nextPeriod.getTime() + i * cycleLength * 24*60*60*1000);
+    const periodEnd = new Date(periodStart.getTime() + periodLength * 24*60*60*1000);
+    const ovulationDate = new Date(periodStart.getTime() + 14 * 24*60*60*1000);
+    const pmsDate = new Date(periodStart.getTime() + (cycleLength - 5) * 24*60*60*1000);
+    const isNext = i === 0;
+    html += `
+      <div style="background:${isNext ? 'linear-gradient(135deg,rgba(224,85,128,.1),rgba(244,167,192,.08))' : 'var(--surface2)'};
+                  border-radius:var(--rs);padding:13px;
+                  border:${isNext ? '1.5px solid rgba(224,85,128,.3)' : '1px solid var(--border)'};
+                  transition:all .2s;"
+           onmouseover="this.style.transform='translateY(-2px)'"
+           onmouseout="this.style.transform='translateY(0)'">
+        <div style="font-weight:700;font-size:13px;color:#c0405f;margin-bottom:8px;">
+          ${isNext ? '⭐ Next — ' : ''}${months[periodStart.getMonth()]} ${periodStart.getFullYear()}
+        </div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.8;">
+          <div>🔴 Period: <strong>${months[periodStart.getMonth()]} ${periodStart.getDate()} — ${months[periodEnd.getMonth()]} ${periodEnd.getDate()}</strong></div>
+          <div>💛 Ovulation: <strong>${months[ovulationDate.getMonth()]} ${ovulationDate.getDate()}</strong></div>
+          <div>💜 PMS starts: <strong>${months[pmsDate.getMonth()]} ${pmsDate.getDate()}</strong></div>
+        </div>
+        ${isNext ? '<div style="margin-top:8px;font-size:11px;font-style:italic;color:#c0405f;">💙 "I will be extra caring this day my love — Sohag"</div>' : ''}
+      </div>
+    `;
+  }
+  container.innerHTML = html;
+}
+
 // Load cycle info on start
 function loadCycleInfo(){
   fetch('/api/cycle/get/')
@@ -3719,6 +4100,8 @@ function loadCycleInfo(){
       }
       drawCycleChart(28);
       loadPeriodHistory();
+      setupMonthSelector();
+      renderCalendar();
     });
 }
 loadCycleInfo();
