@@ -1,6 +1,6 @@
 import json
 import random
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
@@ -12,6 +12,8 @@ from .models import VitalSign, JournalEntry, StressLog, SelfCareLog, DailyRoutin
 # DASHBOARD
 # ═══════════════════════════════════════
 def dashboard(request):
+    if not request.session.get('logged_in'):
+        return redirect('nurse:login')
     # Get records from database
     all_vitals = VitalSign.objects.all()[:10]
     all_journals = JournalEntry.objects.all()[:10]
@@ -535,3 +537,35 @@ def get_cycle_info(request):
             'period_length': 5,
             'next_period': None,
         })
+        
+# ═══════════════════════════════════════
+# 💙 LOGIN SYSTEM
+# ═══════════════════════════════════════
+from django.conf import settings
+
+def login_view(request):
+    error = None
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+        secret = request.POST.get('secret', '').strip()
+        remember = request.POST.get('remember', False)
+
+        if (username == settings.DASHBOARD_USERNAME and
+            password == settings.DASHBOARD_PASSWORD and
+            secret == settings.DASHBOARD_SECRET):
+            request.session['logged_in'] = True
+            request.session['username'] = username
+            if remember:
+                request.session.set_expiry(60 * 60 * 24 * 30)
+            else:
+                request.session.set_expiry(0)
+            return redirect('nurse:dashboard')
+        else:
+            error = 'Wrong credentials my love! Try again 💙'
+
+    return render(request, 'nurse/login.html', {'error': error})
+
+def logout_view(request):
+    request.session.flush()
+    return redirect('nurse:login')        

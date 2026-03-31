@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💙 Jovie Angela Martinez</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f0f6fc;
+}
+.card{
+  width:360px;
+  background:white;
+  border-radius:24px;
+  padding:40px 36px;
+  box-shadow:0 8px 40px rgba(45,111,163,.12);
+  border:1px solid #c8dff0;
+}
+.name{
+  font-family:'Playfair Display',serif;
+  font-size:22px;
+  font-weight:700;
+  color:#2d6fa3;
+  text-align:center;
+  margin-bottom:4px;
+}
+.sub{
+  font-size:12px;
+  color:#8aadc8;
+  text-align:center;
+  margin-bottom:30px;
+  letter-spacing:1px;
+}
+.line{
+  width:50px;height:2px;
+  background:linear-gradient(90deg,#5b9bd5,#f4a7c0);
+  border-radius:100px;
+  margin:0 auto 28px;
+}
+.error{
+  background:rgba(224,85,128,.08);
+  border:1px solid rgba(224,85,128,.25);
+  border-radius:10px;
+  padding:10px;
+  font-size:12px;
+  color:#c0405f;
+  text-align:center;
+  margin-bottom:16px;
+}
+.lbl{
+  font-size:11px;
+  font-weight:600;
+  color:#8aadc8;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:7px;
+  display:block;
+}
+.inp{
+  width:100%;
+  padding:12px 15px;
+  border-radius:12px;
+  border:1.5px solid #c8dff0;
+  background:#f0f6fc;
+  color:#1a2e42;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  outline:none;
+  margin-bottom:16px;
+  transition:all .2s;
+}
+.inp:focus{
+  border-color:#5b9bd5;
+  background:white;
+}
+.inp::placeholder{color:#b0c8de;}
+.check{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:22px;
+  cursor:pointer;
+  font-size:12px;
+  color:#8aadc8;
+}
+.check input{accent-color:#5b9bd5;}
+.btn{
+  width:100%;
+  padding:14px;
+  border-radius:100px;
+  border:none;
+  background:linear-gradient(135deg,#5b9bd5,#2d6fa3);
+  color:white;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  box-shadow:0 6px 18px rgba(45,111,163,.25);
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(45,111,163,.35);}
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:11px;
+  color:#b0c8de;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="name">Jovie Angela Martinez</div>
+  <div class="sub">Private Dashboard 🌸</div>
+  <div class="line"></div>
+
+  {% if error %}
+  <div class="error">❌ {{ error }}</div>
+  {% endif %}
+
+  <form method="POST">
+    {% csrf_token %}
+    <label class="lbl">Username</label>
+    <input type="text" name="username" class="inp" placeholder="Enter username..." required autofocus>
+
+    <label class="lbl">Password</label>
+    <input type="password" name="password" class="inp" placeholder="Enter password..." required>
+
+    <label class="lbl">Secret Word</label>
+    <input type="password" name="secret" class="inp" placeholder="Our secret word..." required>
+
+    <label class="check">
+      <input type="checkbox" name="remember" checked>
+      Remember me for 30 days
+    </label>
+
+    <button type="submit" class="btn">💙 Enter Our Space</button>
+  </form>
+
+  <div class="footer">🌸 Built with love by Sohag, for Angela 💙</div>
+</div>
+</body>
+</html>

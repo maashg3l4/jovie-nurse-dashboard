@@ -45,4 +45,10 @@ urlpatterns = [
     path('api/period/get/', views.get_period_logs, name='get_period_logs'),
     path('api/cycle/save/', views.save_cycle_info, name='save_cycle_info'),
     path('api/cycle/get/', views.get_cycle_info, name='get_cycle_info'),
+
+    
+    # LOGIN 💙
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
+
 ]
